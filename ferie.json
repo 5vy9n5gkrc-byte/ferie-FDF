@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791375757649,
+ "ts": 1791375771299,
  "people": [
   {
    "id": "pgria9i",
@@ -113,6 +113,10 @@
   {
    "id": "p38z6l4",
    "name": "LAMIN"
+  },
+  {
+   "id": "pfkqnwd",
+   "name": ""
   }
  ],
  "services": [
@@ -179,7 +183,8 @@
    "members": [
     "pyuro1s",
     "pcbl15w",
-    "p38z6l4"
+    "p38z6l4",
+    "pfkqnwd"
    ]
   },
   {
