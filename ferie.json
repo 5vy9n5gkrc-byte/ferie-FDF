@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791375233246,
+ "ts": 1791375237415,
  "people": [
   {
    "id": "pgria9i",
@@ -81,6 +81,10 @@
   {
    "id": "pimhrlp",
    "name": "Dipendente 20"
+  },
+  {
+   "id": "p9lz3vx",
+   "name": ""
   }
  ],
  "services": [
@@ -130,6 +134,14 @@
     "pvz169o",
     "paj1mm0",
     "pimhrlp"
+   ]
+  },
+  {
+   "id": "sfv2zl6",
+   "name": "",
+   "max": 1,
+   "members": [
+    "p9lz3vx"
    ]
   }
  ],
