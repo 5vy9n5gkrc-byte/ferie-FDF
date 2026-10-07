@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791375829434,
+ "ts": 1791375838841,
  "people": [
   {
    "id": "pgria9i",
@@ -129,6 +129,10 @@
   {
    "id": "pcz42na",
    "name": "VASILICA"
+  },
+  {
+   "id": "pqmffrt",
+   "name": ""
   }
  ],
  "services": [
@@ -185,7 +189,8 @@
    "max": 1,
    "members": [
     "p9lz3vx",
-    "prmgiqh"
+    "prmgiqh",
+    "pqmffrt"
    ]
   },
   {
