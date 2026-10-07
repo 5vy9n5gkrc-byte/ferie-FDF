@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791374975460,
+ "ts": 1791375201794,
  "people": [
   {
    "id": "pgria9i",
@@ -86,7 +86,7 @@
  "services": [
   {
    "id": "s229b98",
-   "name": "Servizio 1",
+   "name": "UFFICIO",
    "max": 1,
    "members": [
     "pgria9i",
