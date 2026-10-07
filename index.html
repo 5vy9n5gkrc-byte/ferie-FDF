@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ferie — tabellone per servizio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F6F3; --panel:#FFFFFF; --ink:#191C1A; --ink-2:#5C635E; --ink-3:#8A918C;
+    --rule:#CFD4CC; --rule-2:#E6E9E3; --shade:#E9ECE5;
+    --leave:#2F6F66; --leave-ink:#FFFFFF;
+    --alert:#9E1B32; --alert-bg:#FAE7EA; --alert-ink:#9E1B32;
+    --link:#6B5BA8; --link-bg:#EEEBF7;
+    box-sizing:border-box;
+    padding-top:env(safe-area-inset-top,0px);
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#14171A; --panel:#1B1F22; --ink:#E8EBE7; --ink-2:#9AA3A0; --ink-3:#6E7873;
+      --rule:#333A3E; --rule-2:#242A2D; --shade:#1F2528;
+      --leave:#4E9C91; --leave-ink:#0C1211;
+      --alert:#E8768B; --alert-bg:#38161E; --alert-ink:#F2A0AF;
+      --link:#A99BDD; --link-bg:#272342;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#14171A; --panel:#1B1F22; --ink:#E8EBE7; --ink-2:#9AA3A0; --ink-3:#6E7873;
+    --rule:#333A3E; --rule-2:#242A2D; --shade:#1F2528;
+    --leave:#4E9C91; --leave-ink:#0C1211;
+    --alert:#E8768B; --alert-bg:#38161E; --alert-ink:#F2A0AF;
+    --link:#A99BDD; --link-bg:#272342;
+  }
+  *{box-sizing:border-box}
+  html{scroll-padding-top:env(safe-area-inset-top,0px); overflow-x:hidden}
+  body{
+    margin:0; max-width:100%; overflow-x:hidden; overflow-x:clip;
+    background:var(--paper); color:var(--ink);
+    font-family:Archivo,'Helvetica Neue',Arial,sans-serif;
+    font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1;
+    -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:1240px; margin:0 auto; padding:18px 16px 56px}
+
+  /* titolo e barra del mese su righe separate, allineati a sinistra: una barra
+     spinta a destra finisce fuori vista se il pannello mostra meno pagina */
+  header{margin-bottom:14px}
+  header > *{min-width:0; max-width:100%}
+  h1{font-size:30px; font-weight:700; letter-spacing:-.025em; margin:0; line-height:1}
+  .sub{margin:4px 0 0; color:var(--ink-2); font-size:13.5px}
+  .mnav{display:flex; flex-wrap:wrap; align-items:center; gap:4px; margin-top:12px}
+  .mnav .label{min-width:0; text-align:center; font-weight:600; font-size:16px; padding:0 6px; white-space:nowrap}
+  button{font:inherit; color:inherit; cursor:pointer; background:var(--panel); border:1px solid var(--rule); border-radius:3px}
+  button:focus-visible, input:focus-visible{outline:2px solid var(--leave); outline-offset:1px}
+  /* le frecce sono quadrate, "Oggi" si adatta al testo: una regola sola su
+     .mnav button vinceva anche su .today e gli imponeva 34px di larghezza */
+  .mnav button{height:32px; display:inline-flex; align-items:center; justify-content:center; line-height:1}
+  .mnav .arrow{width:34px; font-size:17px; padding:0}
+  .mnav .today{width:auto; padding:0 11px; font-size:13px; color:var(--ink-2); white-space:nowrap}
+  .mnav button:hover{background:var(--shade)}
+
+  .status{
+    border-left:5px solid var(--rule); background:var(--panel);
+    padding:12px 16px; margin-bottom:18px; display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
+  }
+  .status.bad{border-left-color:var(--alert); background:var(--alert-bg)}
+  .status .n{font-size:30px; font-weight:700; letter-spacing:-.03em; line-height:1}
+  .status.bad .n{color:var(--alert-ink)}
+  .status .txt{font-size:15px; font-weight:500}
+  .status .hint{font-size:13px; color:var(--ink-2); font-weight:400}
+
+  .gridwrap{
+    overflow-x:auto; overflow-y:hidden; max-width:100%; overscroll-behavior-x:contain;
+    border:1px solid var(--rule); background:var(--panel); -webkit-overflow-scrolling:touch;
+  }
+  .fill{width:auto; min-width:12px; border:0; background:var(--panel)}
+  tr.band .fill{background:var(--shade)}
+  table{border-collapse:separate; border-spacing:0; width:max-content; min-width:100%; user-select:none; -webkit-user-select:none}
+  table input{user-select:text; -webkit-user-select:text}
+  th,td{padding:0; margin:0; font-weight:400}
+  .sticky{position:sticky; left:0; z-index:3; background:var(--panel); border-right:1px solid var(--rule); width:206px; min-width:206px}
+  thead th{position:sticky; top:0; z-index:4; background:var(--panel)}
+  thead th.sticky{z-index:6}
+  .wd,.dn{width:30px; min-width:30px; text-align:center; font-size:11px; color:var(--ink-2); border-bottom:1px solid var(--rule-2)}
+  .wd{padding-top:7px; letter-spacing:.02em}
+  .dn{padding-bottom:7px; font-size:12.5px; font-weight:600; color:var(--ink); border-bottom:1px solid var(--rule)}
+  .wd.off,.dn.off{background:var(--shade)}
+  .dn.hol::after{content:""; display:block; width:4px; height:4px; border-radius:50%; background:var(--ink-3); margin:3px auto 0}
+  .dn.now{box-shadow:inset 0 -3px 0 var(--leave)}
+
+  tr.band th, tr.band td{border-top:1px solid var(--rule); border-bottom:1px solid var(--rule-2); background:var(--shade); height:34px}
+  tr.band th.sticky{background:var(--shade)}
+  .svcname{display:flex; align-items:center; gap:6px; padding:0 8px}
+  .svcname input.nm{font-weight:600; font-size:13.5px}
+  input.nm{flex:1; min-width:0; border:1px solid transparent; background:transparent; color:inherit; font:inherit; padding:4px 5px; border-radius:3px}
+  input.nm:hover{border-color:var(--rule)}
+  input.nm:focus{border-color:var(--leave); background:var(--panel)}
+  .maxbox{display:flex; align-items:center; gap:3px; font-size:10.5px; color:var(--ink-2); flex:none}
+  .maxbox input{width:30px; text-align:center; font:inherit; font-size:12px; padding:3px 0; border:1px solid var(--rule); border-radius:3px; background:var(--panel); color:inherit}
+  td.cnt{text-align:center; font-size:12px; color:var(--ink-2); border-right:1px solid var(--rule-2)}
+  td.cnt.over{background:var(--alert-bg); color:var(--alert-ink); font-weight:700}
+
+  tr.p th.sticky{border-bottom:1px solid var(--rule-2)}
+  tr.p.shared th.sticky{box-shadow:inset 3px 0 0 var(--link)}
+  .pname{display:flex; align-items:center; gap:4px; padding:0 8px 0 18px}
+  .pname input.nm{font-size:13px}
+  .chip{
+    flex:none; font-size:10px; font-weight:600; color:var(--link); background:var(--link-bg);
+    border-radius:2px; padding:2px 4px; line-height:1.1; cursor:help;
+  }
+  .tot{flex:none; font-size:11px; color:var(--ink-3); min-width:1.6em; text-align:right}
+  .picker{font:inherit; font-size:11.5px; max-width:118px; padding:2px; background:var(--panel); color:inherit; border:1px solid var(--leave); border-radius:3px}
+  td.cell{
+    width:30px; min-width:30px; height:30px; border-right:1px solid var(--rule-2); border-bottom:1px solid var(--rule-2);
+    cursor:pointer; -webkit-tap-highlight-color:transparent;
+  }
+  td.cell.off{background:var(--shade)}
+  td.cell:hover{box-shadow:inset 0 0 0 2px var(--rule)}
+  td.cell.ro{cursor:default}
+  td.cell.ro:hover{box-shadow:none}
+  td.cell.on{background:var(--leave)}
+  td.cell.on.bad{
+    background:var(--alert);
+    background-image:repeating-linear-gradient(45deg, rgba(255,255,255,.42) 0 3px, transparent 3px 6px);
+  }
+  td.cell:focus-visible{outline:2px solid var(--leave); outline-offset:-2px}
+  .iconbtn{flex:none; width:20px; height:20px; border:0; background:transparent; color:var(--ink-3); font-size:14px; line-height:1; border-radius:3px; padding:0}
+  .iconbtn:hover{background:var(--rule-2); color:var(--ink)}
+  .iconbtn.armed{background:var(--alert); color:#fff; width:auto; padding:0 7px; font-size:11px; font-weight:600}
+
+  .below{display:grid; grid-template-columns:1fr; gap:22px; margin-top:22px}
+  @media (min-width:860px){ .below{grid-template-columns:1.25fr 1fr} }
+  h2{font-size:12.5px; font-weight:600; color:var(--ink-2); margin:0 0 9px; letter-spacing:.02em}
+  .clist{margin:0; padding:0; list-style:none; font-size:13.5px}
+  .clist li{padding:7px 0; border-bottom:1px solid var(--rule-2); display:flex; gap:10px}
+  .clist li .d{font-weight:600; flex:none; min-width:4.6em}
+  .clist li .who{color:var(--ink-2)}
+  .clist .svc{color:var(--alert-ink); font-weight:600}
+  .empty{font-size:13.5px; color:var(--ink-2); margin:0}
+  .legend{font-size:12.5px; color:var(--ink-2); display:flex; flex-wrap:wrap; gap:6px 18px; align-items:center}
+  .legend span{display:flex; align-items:center; gap:6px}
+  .sw{width:16px; height:16px; border:1px solid var(--rule); flex:none}
+  .sw.l{background:var(--leave); border-color:var(--leave)}
+  .sw.b{background:var(--alert); border-color:var(--alert); background-image:repeating-linear-gradient(45deg, rgba(255,255,255,.42) 0 3px, transparent 3px 6px)}
+  .sw.w{background:var(--shade)}
+  .sw.s{background:var(--panel); box-shadow:inset 3px 0 0 var(--link)}
+  .actions{margin-top:20px; display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+  .actions button{padding:8px 13px; font-size:13px}
+  .actions button:hover{background:var(--shade)}
+  .actions button:disabled{opacity:.5; cursor:default}
+  #pub.dirty{background:var(--leave); border-color:var(--leave); color:var(--leave-ink); font-weight:600}
+  #pub.dirty:hover{background:var(--leave)}
+  #ghbox{margin-top:24px; border:1px solid var(--rule); background:var(--panel); padding:14px 16px}
+  #ghtoken{width:100%; max-width:420px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px;
+    padding:8px; border:1px solid var(--rule); border-radius:3px; background:var(--paper); color:var(--ink)}
+  #editbtn.live{background:var(--leave); border-color:var(--leave); color:var(--leave-ink); font-weight:600}
+  #databox{margin-top:24px; border:1px solid var(--rule); background:var(--panel); padding:14px 16px}
+  #dataarea{
+    width:100%; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11.5px; line-height:1.45;
+    padding:8px; border:1px solid var(--rule); border-radius:3px; background:var(--paper); color:var(--ink); resize:vertical;
+  }
+  .note{font-size:12px; color:var(--ink-3); margin:16px 0 0}
+  .note b{color:var(--ink-2); font-weight:600}
+
+
+  @media (max-width:560px){
+    .wrap{padding:14px 10px 48px}
+    h1{font-size:25px}
+    .sticky{width:150px; min-width:150px}
+    .pname{padding-left:12px}
+    .status .n{font-size:25px}
+  }
+  .plabel{font-size:13px; color:var(--ink-2); display:flex; align-items:center; gap:6px}
+  .plabel select{font:inherit; font-size:13px; padding:5px 6px; background:var(--panel); color:inherit; border:1px solid var(--rule); border-radius:3px}
+  #printarea{display:none}
+
+  @media print{
+    @page{size:A4 landscape; margin:9mm}
+    html,body{background:#fff; color:#000; overflow:visible; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+    .wrap > *{display:none !important}
+    #printarea{display:block !important}
+    /* a schermo l'intestazione è incollata in alto: in stampa va azzerata,
+       altrimenti Safari la posiziona a fondo tabella */
+    #printarea th, #printarea td, #printarea thead th{position:static !important; top:auto !important; z-index:auto !important}
+    table.pr thead{display:table-header-group}
+    table.pr tbody{break-inside:avoid; page-break-inside:avoid}
+    table.pr tr{break-inside:avoid; page-break-inside:avoid}
+    .pt{break-after:page; page-break-after:always}
+    .pt:last-child{break-after:auto; page-break-after:auto}
+    .pt h3{font-size:11pt; font-weight:700; margin:0 0 1mm; letter-spacing:-.01em}
+    .pt .leg{font-size:7pt; color:#444; margin:0 0 2mm}
+    table.pr{border-collapse:collapse; width:100%; table-layout:fixed; font-size:7pt; color:#000}
+    table.pr th, table.pr td{border:.4pt solid #8a8a8a; height:4.8mm; text-align:center; padding:0; font-weight:400}
+    table.pr th.who{text-align:left; padding:0 1.2mm; width:36mm; overflow:hidden; white-space:nowrap}
+    table.pr tr.sv th, table.pr tr.sv td{background:#e4e4e4; font-weight:700; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+    table.pr tr.sv th.who{font-size:8pt}
+    table.pr td.off{background:#eeeeee; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+    table.pr th.off{background:#eeeeee; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+    table.pr td.on{background:#3b3b3b; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+    table.pr td.bad{background:#000; color:#fff; font-weight:700; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+    table.pr td.over{background:#bdbdbd; font-weight:700; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+    table.pr .wdr th{height:3.4mm; font-size:5.5pt; color:#555}
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .status{transition:background-color .18s ease, border-color .18s ease}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1>Ferie</h1>
+      <p class="sub">Un tabellone per servizio, con avviso sulle sovrapposizioni.</p>
+    </div>
+    <div class="mnav">
+      <button id="prev" class="arrow" title="Mese precedente" aria-label="Mese precedente">&lsaquo;</button>
+      <span class="label" id="mlabel"></span>
+      <button id="next" class="arrow" title="Mese successivo" aria-label="Mese successivo">&rsaquo;</button>
+      <button class="today" id="btoday">Oggi</button>
+    </div>
+  </header>
+
+  <div class="status" id="status"></div>
+
+  <div class="gridwrap"><table id="grid"></table></div>
+
+  <div class="below">
+    <section>
+      <h2 id="ch">Sovrapposizioni del mese</h2>
+      <ul class="clist" id="clist"></ul>
+      <p class="empty" id="cempty"></p>
+    </section>
+    <section>
+      <h2>Come si legge</h2>
+      <div class="legend">
+        <span><i class="sw l"></i> in ferie</span>
+        <span><i class="sw b"></i> oltre il max del servizio</span>
+        <span><i class="sw w"></i> weekend o festivo</span>
+        <span><i class="sw s"></i> persona su pi&ugrave; servizi</span>
+      </div>
+      <p class="note">Le modifiche restano su questo dispositivo finch&eacute; non premi <b>Pubblica aggiornamento</b>: da quel momento chi apre il link vede la versione nuova. Chi consulta il link non pu&ograve; modificare nulla.</p>
+      <p class="note">Clicca una casella per segnare le ferie, trascina per un periodo intero. Il numero nella riga grigia del servizio dice quante persone sono assenti quel giorno; diventa rosso quando supera il <b>max</b> impostato accanto al nome del servizio.</p>
+      <p class="note">I nomi sono indipendenti: scrivere due volte lo stesso nome crea due persone distinte. Per chi lavora su pi&ugrave; servizi usa il pulsante <b>&#8644;</b> sulla sua riga e scegli la riga dell&rsquo;altro servizio: da quel momento &egrave; una persona sola, le ferie si segnano una volta e compaiono in tutti i suoi servizi. Dallo stesso pulsante puoi anche separarla di nuovo.</p>
+    </section>
+  </div>
+
+  <div class="actions">
+    <button id="addsvc">Aggiungi servizio</button>
+    <button id="clearmonth">Svuota il mese</button>
+    <button id="editbtn">Attiva modifica</button>
+    <button id="reloadbtn">Ricarica</button>
+    <button id="datatoggle">Copia o incolla i dati</button>
+    <span class="note" id="savenote" style="margin:0"></span>
+  </div>
+
+  <section id="ghbox" hidden>
+    <h2>Attivare la modifica</h2>
+    <p class="note" style="margin:0 0 8px">Serve un token GitHub con permesso di scrittura sul repository <b>ferie_fdf</b>. Resta salvato soltanto in questo browser e lo puoi revocare quando vuoi da GitHub.</p>
+    <input id="ghtoken" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_&hellip;">
+    <div class="actions" style="margin-top:8px">
+      <button id="ghsave">Attiva la modifica</button>
+      <button id="ghforget">Dimentica il token</button>
+      <span class="note" id="ghnote" style="margin:0"></span>
+    </div>
+  </section>
+
+  <div class="actions" id="printbar">
+    <label class="plabel">Stampa <select id="printscope"></select></label>
+    <label class="plabel"><select id="printrange">
+      <option value="month">solo questo mese</option>
+      <option value="year">tutti i mesi dell&rsquo;anno</option>
+    </select></label>
+    <button id="printbtn">Stampa o salva in PDF</button>
+  </div>
+
+  <div id="printarea" aria-hidden="true"></div>
+
+  <section id="databox" hidden>
+    <h2>Spostare i dati da un dispositivo all&rsquo;altro</h2>
+    <p class="note" style="margin:0 0 8px">Il riquadro contiene tutto il tabellone. Copialo dal dispositivo dove hai i dati giusti, poi aprilo nel pannello di Claude, incollalo qui e premi Sostituisci.</p>
+    <textarea id="dataarea" spellcheck="false" rows="5"></textarea>
+    <div class="actions" style="margin-top:8px">
+      <button id="datacopy">Copia tutto</button>
+      <button id="datalocal">Mostra la copia salvata in questo browser</button>
+      <button id="dataload">Sostituisci con i dati incollati</button>
+      <span class="note" id="datanote" style="margin:0"></span>
+    </div>
+  </section>
+</div>
+
+
+<script>
+(function(){
+  "use strict";
+
+  var MESI = ["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
+  var WD = ["D","L","M","M","G","V","S"];
+
+  /* state = {
+       people:   [{id, name}]                       anagrafica: una voce per persona
+       services: [{id, name, max, members:[peopleId]}]
+       leave:    {peopleId: {"2026-10-05":1}}        le ferie stanno sulla persona
+     } */
+  /* v3: i collegamenti fra servizi sono solo quelli fatti a mano.
+     I dati salvati prima di questa versione portano i collegamenti creati
+     automaticamente dal nome, e vanno sciolti una volta per tutte. */
+  var DATA_V = 3;
+
+  var state = seed();
+  var view = initialView();
+  /* Repository di destinazione. Se la pagina è su GitHub Pages, proprietario e
+     nome vengono ricavati dall'indirizzo: così il nome del repository non va
+     tenuto allineato a mano, e un rinomino non rompe niente. I valori qui sotto
+     servono solo quando la pagina è aperta fuori da GitHub Pages (file locale). */
+  var GH = { owner:"5vy9n5gkrc-byte", repo:"ferie-FDF", branch:"main", path:"ferie.json" };
+  (function(){
+    try{
+      var m = String(location.hostname || "").match(/^([^.]+)\.github\.io$/i);
+      var seg = String(location.pathname || "").split("/").filter(Boolean);
+      if (m && seg.length){ GH.owner = m[1]; GH.repo = seg[0]; }
+    }catch(e){}
+  })();
+
+  var token = null, remoteSha = null, remoteTs = 0, savedTs = 0;
+  var saving = false, statusMsg = "", didMigrate = false;
+  /* la pagina parte in sola lettura: si modifica solo dal pannello di Claude,
+     dove è disponibile la pubblicazione. Col link pubblico si consulta. */
+  var canEdit = false;
+
+
+  function uid(p){ return p + Math.random().toString(36).slice(2,8); }
+
+  function seed(){
+    var people = [], services = [], k = 1;
+    for (var i=1;i<=4;i++){
+      var members = [];
+      for (var j=0;j<5;j++){
+        var p = {id:uid("p"), name:"Dipendente "+(k++)};
+        people.push(p); members.push(p.id);
+      }
+      services.push({id:uid("s"), name:"Servizio "+i, max:1, members:members});
+    }
+    return {v:DATA_V, ts:0, people:people, services:services, leave:{}};
+  }
+  function initialView(){
+    var now = new Date(), y = now.getFullYear(), m = now.getMonth();
+    try{
+      var raw = localStorage.getItem("ferie:view");
+      if (raw){ var v = JSON.parse(raw); if (typeof v.y==="number" && typeof v.m==="number"){ y=v.y; m=v.m; } }
+    }catch(e){}
+    return {y:y, m:m};
+  }
+  function rememberView(){ try{ localStorage.setItem("ferie:view", JSON.stringify(view)); }catch(e){} }
+
+  /* ---------- anagrafica ---------- */
+  function person(id){
+    for (var i=0;i<state.people.length;i++) if (state.people[i].id === id) return state.people[i];
+    return null;
+  }
+  function servicesOf(pid){
+    return state.services.filter(function(s){ return s.members.indexOf(pid) >= 0; });
+  }
+  /* togliere una riga rimuove la persona solo dal servizio; se non è più in nessuno, esce dall'anagrafica */
+  function dropFromService(svc, pid){
+    svc.members = svc.members.filter(function(id){ return id !== pid; });
+    if (!servicesOf(pid).length){
+      state.people = state.people.filter(function(p){ return p.id !== pid; });
+      delete state.leave[pid];
+    }
+  }
+
+  /* ---------- calendario ---------- */
+  function daysIn(y,m){ return new Date(y, m+1, 0).getDate(); }
+  function iso(y,m,d){ return y + "-" + String(m+1).padStart(2,"0") + "-" + String(d).padStart(2,"0"); }
+  function easterMonday(y){
+    var a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,
+        f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,
+        i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),
+        mo=Math.floor((h+l-7*m+114)/31), da=((h+l-7*m+114)%31)+1;
+    var dt = new Date(y, mo-1, da); dt.setDate(dt.getDate()+1);
+    return iso(dt.getFullYear(), dt.getMonth(), dt.getDate());
+  }
+  function holidays(y){
+    var fixed = ["01-01","01-06","04-25","05-01","06-02","08-15","11-01","12-08","12-25","12-26"];
+    var set = Object.create(null);
+    fixed.forEach(function(s){ set[y+"-"+s] = true; });
+    set[easterMonday(y)] = true;
+    return set;
+  }
+
+  /* ---------- ferie ---------- */
+  function isOn(pid, date){ var m = state.leave[pid]; return !!(m && m[date]); }
+  function setOn(pid, date, on){
+    var m = state.leave[pid];
+    if (on){ if(!m){ m = state.leave[pid] = {}; } m[date] = 1; }
+    else if (m){ delete m[date]; if (!Object.keys(m).length) delete state.leave[pid]; }
+  }
+
+  /* ---------- analisi ---------- */
+  function analyse(){
+    var y=view.y, m=view.m, n=daysIn(y,m);
+    var out = {counts:[], over:[], rows:[], days:0};
+    state.services.forEach(function(svc){
+      var counts = new Array(n+1).fill(0);
+      var over = new Array(n+1).fill(false);
+      for (var d=1; d<=n; d++){
+        var date = iso(y,m,d), c = 0, who = [];
+        svc.members.forEach(function(pid){
+          if (isOn(pid, date)){ c++; var p = person(pid); who.push((p && p.name) || "senza nome"); }
+        });
+        counts[d] = c;
+        if (c > (svc.max || 1)){
+          over[d] = true;
+          out.rows.push({svc:svc.name || "servizio", day:d, who:who, max:svc.max||1});
+        }
+      }
+      out.counts.push(counts); out.over.push(over);
+    });
+    var ds = Object.create(null);
+    out.rows.forEach(function(r){ ds[r.day] = true; });
+    out.days = Object.keys(ds).length;
+    out.rows.sort(function(a,b){ return a.day - b.day; });
+    return out;
+  }
+
+  /* ---------- griglia ---------- */
+  var cellIndex = [], cntIndex = [], rowMeta = [], rowList = [], focusAt = null;
+
+  function buildGrid(){
+    var y=view.y, m=view.m, n=daysIn(y,m), hol=holidays(y);
+    var today = new Date();
+    var todayIso = iso(today.getFullYear(), today.getMonth(), today.getDate());
+    var tbl = document.getElementById("grid");
+    tbl.textContent = "";
+    cellIndex = []; cntIndex = []; rowMeta = []; rowList = [];
+
+    var meta = [];
+    for (var d=1; d<=n; d++){
+      var date = iso(y,m,d), wd = new Date(y,m,d).getDay();
+      meta.push({d:d, date:date, wd:wd, off:(wd===0||wd===6||!!hol[date]), hol:!!hol[date], now:date===todayIso});
+    }
+
+    var thead = document.createElement("thead");
+    var r1 = document.createElement("tr"), r2 = document.createElement("tr");
+    var corner = document.createElement("th");
+    corner.className = "sticky"; corner.rowSpan = 2;
+    thead.appendChild(r1); thead.appendChild(r2);
+    r1.appendChild(corner);
+    meta.forEach(function(x){
+      var a = document.createElement("th");
+      a.className = "wd" + (x.off?" off":""); a.textContent = WD[x.wd];
+      r1.appendChild(a);
+      var b = document.createElement("th");
+      b.className = "dn" + (x.off?" off":"") + (x.hol?" hol":"") + (x.now?" now":"");
+      b.textContent = x.d;
+      if (x.hol) b.title = "Festivo";
+      r2.appendChild(b);
+    });
+    var f1 = document.createElement("th"); f1.className = "fill"; r1.appendChild(f1);
+    var f2 = document.createElement("th"); f2.className = "fill"; r2.appendChild(f2);
+    tbl.appendChild(thead);
+
+    state.services.forEach(function(svc, si){
+      var tb = document.createElement("tbody");
+      cellIndex.push([]); cntIndex.push([]); rowMeta.push([]);
+
+      var band = document.createElement("tr"); band.className = "band";
+      var bth = document.createElement("th"); bth.className = "sticky";
+      var box = document.createElement("div"); box.className = "svcname";
+      box.appendChild(nameInput(svc.name, "Nome del servizio", true, function(v){ svc.name = v; commit(true); }));
+      var mb = document.createElement("label"); mb.className = "maxbox";
+      mb.title = "Quante persone possono essere in ferie contemporaneamente in questo servizio";
+      mb.appendChild(document.createTextNode("max"));
+      var mi = document.createElement("input");
+      mi.type="number"; mi.min="1"; mi.max="99"; mi.value = svc.max || 1;
+      mi.addEventListener("change", function(){
+        var v = parseInt(mi.value,10); if (!(v>=1)) v = 1; if (v>99) v = 99;
+        mi.value = v; svc.max = v; commit(true);
+      });
+      if (!canEdit) mi.disabled = true;
+      mb.appendChild(mi); box.appendChild(mb);
+      if (canEdit){
+        var plus = document.createElement("button");
+        plus.className = "iconbtn"; plus.textContent = "+";
+        plus.title = "Aggiungi una persona a questo servizio";
+        plus.addEventListener("click", function(){
+          var p = {id:uid("p"), name:""};
+          state.people.push(p); svc.members.push(p.id);
+          commit(true);
+          var inp = document.querySelector('input[data-pid="'+p.id+'"]');
+          if (inp) inp.focus();
+        });
+        box.appendChild(plus);
+        box.appendChild(removeBtn("Rimuovi il servizio", function(){
+          var ids = svc.members.slice();
+          state.services = state.services.filter(function(s){ return s !== svc; });
+          ids.forEach(function(pid){
+            if (!servicesOf(pid).length){
+              state.people = state.people.filter(function(p){ return p.id !== pid; });
+              delete state.leave[pid];
+            }
+          });
+          commit(true);
+        }));
+      }
+      bth.appendChild(box); band.appendChild(bth);
+      meta.forEach(function(x){
+        var td = document.createElement("td"); td.className = "cnt";
+        cntIndex[si][x.d] = td; band.appendChild(td);
+      });
+      var bf = document.createElement("td"); bf.className = "fill"; band.appendChild(bf);
+      tb.appendChild(band);
+
+      svc.members.forEach(function(pid, pi){
+        var p = person(pid);
+        if (!p) return;
+        var others = servicesOf(pid).filter(function(s){ return s !== svc; });
+        var tr = document.createElement("tr");
+        tr.className = "p" + (others.length ? " shared" : "");
+        var th = document.createElement("th"); th.className = "sticky";
+        var pb = document.createElement("div"); pb.className = "pname";
+        var inp = nameInput(p.name, "Nome", false, function(v){ rename(p, v); });
+        inp.dataset.pid = p.id;
+        pb.appendChild(inp);
+        if (others.length){
+          var chip = document.createElement("span"); chip.className = "chip";
+          chip.textContent = (others.length + 1) + " serv.";
+          chip.title = "Stessa persona anche in: " + others.map(function(s){ return s.name || "servizio senza nome"; }).join(", ");
+          pb.appendChild(chip);
+        }
+        var tot = document.createElement("span"); tot.className = "tot";
+        pb.appendChild(tot);
+        if (canEdit){
+          pb.appendChild(linkBtn(svc, p));
+          pb.appendChild(removeBtn("Togli dal servizio", function(){
+            dropFromService(svc, pid); commit(true);
+          }));
+        }
+        th.appendChild(pb); tr.appendChild(th);
+
+        var ri = rowList.length;
+        rowList.push({si:si, pi:pi});
+        rowMeta[si][pi] = {pid:pid, tot:tot};
+        cellIndex[si].push([]);
+        meta.forEach(function(x){
+          var td = document.createElement("td");
+          td.className = "cell" + (x.off?" off":"");
+          td.dataset.p = pid; td.dataset.date = x.date;
+          td.dataset.r = ri; td.dataset.d = x.d;
+          if (canEdit){ td.setAttribute("role","button"); td.tabIndex = -1; }
+          else td.classList.add("ro");
+          td.title = (p.name || "senza nome") + " \u2014 " + x.d + " " + MESI[m];
+          cellIndex[si][pi][x.d] = td;
+          tr.appendChild(td);
+        });
+        var rf = document.createElement("td"); rf.className = "fill"; tr.appendChild(rf);
+        tb.appendChild(tr);
+      });
+      tbl.appendChild(tb);
+    });
+
+    if (canEdit){
+      if (!focusAt || !cellFor(focusAt)) focusAt = rowList.length ? {r:0, d:1} : null;
+      if (focusAt) cellFor(focusAt).tabIndex = 0;
+    }
+    fillPrintScope();
+    syncGrid();
+  }
+
+  /* il nome è solo un'etichetta: non collega niente da sé */
+  function rename(p, value){
+    p.name = String(value||"").trim();
+    commit(true);
+  }
+
+  /* collegamento esplicito: questa riga è la stessa persona di un'altra */
+  function linkTo(svc, p, targetId){
+    var t = person(targetId);
+    if (!t || t.id === p.id) return;
+    svc.members = svc.members.map(function(id){ return id === p.id ? t.id : id; });
+    var seen = {}, out = [];
+    svc.members.forEach(function(id){ if (!seen[id]){ seen[id] = 1; out.push(id); } });
+    svc.members = out;
+    if (!servicesOf(p.id).length){
+      /* la vecchia scheda non serve più: le sue ferie passano alla persona collegata */
+      var a = state.leave[p.id];
+      if (a){
+        var b = state.leave[t.id] || (state.leave[t.id] = {});
+        Object.keys(a).forEach(function(d){ b[d] = 1; });
+        delete state.leave[p.id];
+      }
+      state.people = state.people.filter(function(q){ return q.id !== p.id; });
+    }
+    commit(true);
+  }
+
+  /* separazione: questa riga torna a essere una persona a sé, con le stesse ferie */
+  function unlink(svc, p){
+    var np = {id:uid("p"), name:p.name};
+    state.people.push(np);
+    svc.members = svc.members.map(function(id){ return id === p.id ? np.id : id; });
+    var a = state.leave[p.id];
+    if (a){
+      var copy = {};
+      Object.keys(a).forEach(function(d){ copy[d] = 1; });
+      state.leave[np.id] = copy;
+    }
+    commit(true);
+  }
+
+  function linkBtn(svc, p){
+    var b = document.createElement("button");
+    b.className = "iconbtn"; b.textContent = "\u21c4";
+    b.title = "\u00c8 la stessa persona di un'altra riga";
+    b.addEventListener("click", function(){
+      var sel = document.createElement("select");
+      sel.className = "picker";
+      var o0 = document.createElement("option");
+      o0.value = ""; o0.textContent = "Collega a\u2026";
+      sel.appendChild(o0);
+      if (servicesOf(p.id).length > 1){
+        var ou = document.createElement("option");
+        ou.value = "__unlink"; ou.textContent = "Rendi indipendente";
+        sel.appendChild(ou);
+      }
+      var n = 0;
+      state.people.forEach(function(q){
+        if (q.id === p.id || svc.members.indexOf(q.id) >= 0) return;
+        var where = servicesOf(q.id).map(function(s){ return s.name || "senza nome"; }).join(", ");
+        var o = document.createElement("option");
+        o.value = q.id;
+        o.textContent = (q.name || "senza nome") + (where ? " \u00b7 " + where : "");
+        sel.appendChild(o); n++;
+      });
+      if (!n && servicesOf(p.id).length <= 1){
+        var od = document.createElement("option");
+        od.value = ""; od.disabled = true;
+        od.textContent = "nessun'altra riga disponibile";
+        sel.appendChild(od);
+      }
+      sel.addEventListener("change", function(){
+        var v = sel.value;
+        if (v === "__unlink") unlink(svc, p);
+        else if (v) linkTo(svc, p, v);
+        else commit(true);
+      });
+      sel.addEventListener("blur", function(){ if (sel.isConnected) commit(true); });
+      b.replaceWith(sel);
+      sel.focus();
+    });
+    return b;
+  }
+
+  function nameInput(val, ph, bold, onChange){
+    var i = document.createElement("input");
+    i.className = "nm"; i.value = val || ""; i.placeholder = ph; i.spellcheck = false;
+    if (bold) i.style.fontWeight = "600";
+    if (!canEdit){ i.readOnly = true; i.tabIndex = -1; }
+    else i.addEventListener("change", function(){ onChange(i.value); });
+    return i;
+  }
+  function removeBtn(title, action){
+    var b = document.createElement("button");
+    b.className = "iconbtn"; b.textContent = "\u00d7"; b.title = title + " (due clic)";
+    var t = null;
+    b.addEventListener("click", function(){
+      if (b.classList.contains("armed")){ clearTimeout(t); action(); return; }
+      b.classList.add("armed"); b.textContent = "rimuovi";
+      t = setTimeout(function(){ b.classList.remove("armed"); b.textContent = "\u00d7"; }, 2600);
+    });
+    return b;
+  }
+
+  function syncGrid(){
+    var a = analyse(), y=view.y, m=view.m, n=daysIn(y,m);
+    state.services.forEach(function(svc, si){
+      (rowMeta[si]||[]).forEach(function(rm, pi){
+        if (!rm) return;
+        var tot = 0;
+        for (var d=1; d<=n; d++){
+          var on = isOn(rm.pid, iso(y,m,d));
+          if (on) tot++;
+          var td = cellIndex[si][pi][d];
+          td.classList.toggle("on", on);
+          td.classList.toggle("bad", on && a.over[si][d]);
+          td.setAttribute("aria-pressed", on ? "true" : "false");
+        }
+        rm.tot.textContent = tot ? tot : "";
+        rm.tot.title = tot ? tot + " giorni di ferie in " + MESI[m] : "";
+      });
+      for (var d2=1; d2<=n; d2++){
+        var c = a.counts[si][d2], td2 = cntIndex[si][d2];
+        td2.textContent = c ? c : "";
+        td2.classList.toggle("over", a.over[si][d2]);
+        td2.title = c ? c + (c===1?" persona":" persone") + " in ferie" : "";
+      }
+    });
+    renderStatus(a);
+    renderConflicts(a);
+  }
+
+  function renderStatus(a){
+    var el = document.getElementById("status"), label = MESI[view.m] + " " + view.y;
+    el.textContent = "";
+    el.classList.toggle("bad", a.days > 0);
+    if (!a.days){
+      var ok = document.createElement("span"); ok.className = "txt";
+      ok.textContent = "Nessuna sovrapposizione in " + label + ".";
+      el.appendChild(ok);
+      var h = document.createElement("span"); h.className = "hint";
+      h.textContent = "Ogni servizio resta entro il suo massimo di assenze.";
+      el.appendChild(h);
+      return;
+    }
+    var nEl = document.createElement("span"); nEl.className = "n"; nEl.textContent = a.days;
+    el.appendChild(nEl);
+    var t = document.createElement("span"); t.className = "txt";
+    t.textContent = (a.days===1 ? "giorno con un servizio scoperto" : "giorni con un servizio scoperto") + " in " + label;
+    el.appendChild(t);
+    var hint = document.createElement("span"); hint.className = "hint";
+    hint.textContent = a.rows.length + (a.rows.length===1 ? " caso da sistemare" : " casi da sistemare");
+    el.appendChild(hint);
+  }
+
+  function renderConflicts(a){
+    var ul = document.getElementById("clist"), p = document.getElementById("cempty");
+    ul.textContent = ""; p.textContent = "";
+    document.getElementById("ch").textContent = "Sovrapposizioni di " + MESI[view.m];
+    if (!a.rows.length){ p.textContent = "Niente da risolvere in questo mese."; return; }
+    a.rows.slice(0,24).forEach(function(r){
+      var li = document.createElement("li");
+      var d = document.createElement("span"); d.className = "d";
+      d.textContent = r.day + " " + MESI[view.m].slice(0,3);
+      li.appendChild(d);
+      var w = document.createElement("span"); w.className = "who";
+      var s = document.createElement("span"); s.className = "svc"; s.textContent = r.svc;
+      w.appendChild(s);
+      w.appendChild(document.createTextNode(" \u2014 " + r.who.join(", ") + " (max " + r.max + ")"));
+      li.appendChild(w);
+      ul.appendChild(li);
+    });
+    if (a.rows.length > 24){
+      var li2 = document.createElement("li");
+      li2.textContent = "e altri " + (a.rows.length - 24) + " casi.";
+      ul.appendChild(li2);
+    }
+  }
+  function render(){ buildGrid(); }
+
+  /* ---------- clic e trascinamento ---------- */
+  var paint = null;
+  var wrapEl = document.querySelector(".gridwrap");
+  function cellAt(x,y){
+    var el = document.elementFromPoint(x,y);
+    return (el && el.classList && el.classList.contains("cell")) ? el : null;
+  }
+  function apply(td){
+    if (!td || paint === null) return;
+    if (isOn(td.dataset.p, td.dataset.date) === paint.on) return;
+    setOn(td.dataset.p, td.dataset.date, paint.on);
+    paint.touched = true;
+    syncGrid();
+  }
+  wrapEl.addEventListener("pointerdown", function(e){
+    if (!canEdit) return;
+    var td = (e.target.classList && e.target.classList.contains("cell")) ? e.target : null;
+    if (!td) return;
+    paint = {on:!isOn(td.dataset.p, td.dataset.date), drag:e.pointerType === "mouse", touched:false};
+    apply(td);
+    if (paint.drag) e.preventDefault();
+  });
+  wrapEl.addEventListener("pointermove", function(e){
+    if (!paint || !paint.drag) return;
+    apply(cellAt(e.clientX, e.clientY));
+  });
+  function endPaint(){
+    if (paint && paint.touched) commit(false);
+    paint = null;
+  }
+  window.addEventListener("pointerup", endPaint);
+  window.addEventListener("pointercancel", endPaint);
+
+  /* ---------- tastiera ---------- */
+  function cellFor(pos){
+    var row = rowList[pos && pos.r];
+    if (!row) return null;
+    var arr = cellIndex[row.si] && cellIndex[row.si][row.pi];
+    return (arr && arr[pos.d]) || null;
+  }
+  function moveFocus(dr, dd){
+    if (!focusAt) return;
+    var n = daysIn(view.y, view.m);
+    var r = Math.min(Math.max(focusAt.r + dr, 0), rowList.length - 1);
+    var d = Math.min(Math.max(focusAt.d + dd, 1), n);
+    var old = cellFor(focusAt);
+    if (old) old.tabIndex = -1;
+    focusAt = {r:r, d:d};
+    var el = cellFor(focusAt);
+    if (el){ el.tabIndex = 0; el.focus(); }
+  }
+  wrapEl.addEventListener("focusin", function(e){
+    var td = e.target;
+    if (!td.classList || !td.classList.contains("cell")) return;
+    var old = focusAt && cellFor(focusAt);
+    if (old && old !== td) old.tabIndex = -1;
+    focusAt = {r:parseInt(td.dataset.r,10), d:parseInt(td.dataset.d,10)};
+    td.tabIndex = 0;
+  });
+  wrapEl.addEventListener("keydown", function(e){
+    if (!canEdit) return;
+    var td = e.target;
+    if (!td.classList || !td.classList.contains("cell")) return;
+    var k = e.key;
+    if (k === "ArrowLeft"){ e.preventDefault(); e.stopPropagation(); moveFocus(0,-1); }
+    else if (k === "ArrowRight"){ e.preventDefault(); e.stopPropagation(); moveFocus(0,1); }
+    else if (k === "ArrowUp"){ e.preventDefault(); moveFocus(-1,0); }
+    else if (k === "ArrowDown"){ e.preventDefault(); moveFocus(1,0); }
+    else if (k === " " || k === "Enter"){
+      e.preventDefault();
+      setOn(td.dataset.p, td.dataset.date, !isOn(td.dataset.p, td.dataset.date));
+      commit(false);
+      var back = cellFor(focusAt);
+      if (back){ back.tabIndex = 0; back.focus(); }
+    }
+  });
+
+  /* ---------- mese ---------- */
+  function go(delta){
+    var d = new Date(view.y, view.m + delta, 1);
+    view = {y:d.getFullYear(), m:d.getMonth()};
+    rememberView(); updateLabel(); render();
+  }
+  function updateLabel(){ document.getElementById("mlabel").textContent = MESI[view.m] + " " + view.y; }
+  document.getElementById("prev").addEventListener("click", function(){ go(-1); });
+  document.getElementById("next").addEventListener("click", function(){ go(1); });
+  document.getElementById("btoday").addEventListener("click", function(){
+    var n = new Date(); view = {y:n.getFullYear(), m:n.getMonth()};
+    rememberView(); updateLabel(); render();
+  });
+  document.addEventListener("keydown", function(e){
+    if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+    if (e.key === "ArrowLeft") go(-1);
+    if (e.key === "ArrowRight") go(1);
+  });
+
+  document.getElementById("addsvc").addEventListener("click", function(){
+    var p = {id:uid("p"), name:""};
+    state.people.push(p);
+    state.services.push({id:uid("s"), name:"", max:1, members:[p.id]});
+    commit(true);
+  });
+  document.getElementById("clearmonth").addEventListener("click", function(){
+    var y=view.y, m=view.m, n=daysIn(y,m), changed=false;
+    Object.keys(state.leave).forEach(function(pid){
+      for (var d=1; d<=n; d++){
+        if (isOn(pid, iso(y,m,d))){ setOn(pid, iso(y,m,d), false); changed = true; }
+      }
+    });
+    if (changed) commit(false); else syncGrid();
+  });
+
+  /* ---------- persistenza ----------
+     I dati vivono dentro la pagina pubblicata: chi apre il link li vede
+     senza bisogno di un account. Le modifiche restano su questo dispositivo
+     finché non premi "Pubblica aggiornamento". */
+  function commit(rebuild){
+    state.ts = Date.now();
+    if (rebuild) render(); else syncGrid();
+    saveLocal(); scheduleSave();
+  }
+  function saveLocal(){ try{ localStorage.setItem("ferie:data", JSON.stringify(state)); }catch(e){} }
+  function readLocal(){
+    try{
+      var raw = localStorage.getItem("ferie:data");
+      if (raw){ var o = JSON.parse(raw); if (o && o.services) return o; }
+    }catch(e){}
+    return null;
+  }
+
+  /* accetta sia il formato nuovo (people + members) sia quello vecchio (persone dentro i servizi) */
+  function normalise(o){
+    var people = [], byId = {}, services = [];
+    (o.people||[]).forEach(function(x){
+      if (!x || !x.id || byId[x.id]) return;
+      var p = {id:x.id, name: typeof x.name === "string" ? x.name : ""};
+      byId[p.id] = p; people.push(p);
+    });
+    (o.services||[]).forEach(function(x){
+      if (!x) return;
+      var svc = {
+        id: x.id || uid("s"),
+        name: typeof x.name === "string" ? x.name : "",
+        max: (parseInt(x.max,10) >= 1) ? parseInt(x.max,10) : 1,
+        members: []
+      };
+      var src = x.members || x.people || [];
+      src.forEach(function(it){
+        var id, nm;
+        if (typeof it === "string"){ id = it; nm = (byId[id]||{}).name || ""; }
+        else if (it && typeof it === "object"){ id = it.id || uid("p"); nm = typeof it.name === "string" ? it.name : ""; }
+        else return;
+        if (!byId[id]){ var p = {id:id, name:nm}; byId[id] = p; people.push(p); }
+        /* i nomi uguali restano persone distinte: si collegano solo a mano */
+        if (svc.members.indexOf(id) < 0) svc.members.push(id);
+      });
+      services.push(svc);
+    });
+    var lv = {};
+    var src2 = o.leave || {};
+    Object.keys(src2).forEach(function(pid){
+      var m = src2[pid]; if (!m || typeof m !== "object") return;
+      var key = pid;
+      if (!byId[key]) return;
+      var keep = lv[key] || {};
+      Object.keys(m).forEach(function(d){ if (/^\d{4}-\d{2}-\d{2}$/.test(d) && m[d]) keep[d] = 1; });
+      if (Object.keys(keep).length) lv[key] = keep;
+    });
+    people = people.filter(function(p){
+      return services.some(function(s){ return s.members.indexOf(p.id) >= 0; });
+    });
+
+    /* dati anteriori alla v3: ogni riga torna una persona a sé, con le sue ferie */
+    if (!(parseInt(o.v, 10) >= 3)){
+      didMigrate = true;
+      var count = {};
+      services.forEach(function(s){
+        s.members.forEach(function(id){ count[id] = (count[id] || 0) + 1; });
+      });
+      services.forEach(function(s){
+        s.members = s.members.map(function(id){
+          if (count[id] <= 1) return id;
+          var src = byId[id];
+          var np = {id:uid("p"), name: src ? src.name : ""};
+          people.push(np); byId[np.id] = np;
+          if (lv[id]){
+            var copy = {};
+            Object.keys(lv[id]).forEach(function(d){ copy[d] = 1; });
+            lv[np.id] = copy;
+          }
+          return np.id;
+        });
+      });
+      people = people.filter(function(p){
+        return services.some(function(s){ return s.members.indexOf(p.id) >= 0; });
+      });
+      var live = {};
+      services.forEach(function(s){ s.members.forEach(function(id){ live[id] = 1; }); });
+      Object.keys(lv).forEach(function(pid){ if (!live[pid]) delete lv[pid]; });
+    }
+
+    return {v:DATA_V, ts:(parseInt(o.ts,10) || 0), people:people, services:services, leave:lv};
+  }
+
+  function note(t){ document.getElementById("savenote").textContent = t; }
+
+  function stamp(ts){
+    if (!ts) return "";
+    var d = new Date(ts);
+    return d.getDate() + " " + MESI[d.getMonth()] + " alle " +
+           String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+  }
+  function refreshUI(){
+    var eb = document.getElementById("editbtn");
+    document.getElementById("addsvc").hidden = !canEdit;
+    document.getElementById("clearmonth").hidden = !canEdit;
+    document.getElementById("dataload").hidden = !canEdit;
+    eb.classList.toggle("live", canEdit);
+    eb.textContent = canEdit ? "Modifica attiva" : "Attiva modifica";
+    if (statusMsg){ note(statusMsg); return; }
+    if (!canEdit){
+      note("Sola lettura." + (remoteTs ? " Aggiornato al " + stamp(remoteTs) + "." : ""));
+      return;
+    }
+    if (saving) note("Salvo su GitHub\u2026");
+    else if (pendingSave) note("Modifiche da salvare\u2026");
+    else note("Salvato su GitHub" + (remoteTs ? ", aggiornato al " + stamp(remoteTs) : "") + ".");
+  }
+  function say(msg){ statusMsg = msg; refreshUI(); }
+  function clearSay(){ statusMsg = ""; refreshUI(); }
+
+  /* ---------- GitHub ----------
+     I dati stanno in un file del repository. Chi consulta lo legge senza
+     autenticarsi; per scrivere serve un token con permesso sui contenuti. */
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = "";
+    for (var i=0;i<bytes.length;i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
+  function b64decode(b64){
+    var bin = atob(String(b64).replace(/\s/g, ""));
+    var bytes = new Uint8Array(bin.length);
+    for (var i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+  function apiUrl(){
+    return "https://api.github.com/repos/" + GH.owner + "/" + GH.repo +
+           "/contents/" + GH.path + "?ref=" + encodeURIComponent(GH.branch);
+  }
+  function rawUrl(){
+    return "https://raw.githubusercontent.com/" + GH.owner + "/" + GH.repo + "/" +
+           GH.branch + "/" + GH.path + "?t=" + Date.now();
+  }
+  function headers(){
+    var h = {"Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"};
+    if (token) h["Authorization"] = "Bearer " + token;
+    return h;
+  }
+
+  /* con il token passa dall'API, che restituisce anche lo sha necessario a scrivere;
+     senza token legge il file grezzo, che non ha limiti di chiamate */
+  function fetchRemote(){
+    if (token){
+      return fetch(apiUrl(), {headers:headers(), cache:"no-store"}).then(function(r){
+        if (!r.ok) return Promise.reject({http:r.status});
+        return r.json();
+      }).then(function(j){
+        remoteSha = j.sha;
+        return JSON.parse(b64decode(j.content));
+      });
+    }
+    return fetch(rawUrl(), {cache:"no-store"}).then(function(r){
+      if (!r.ok) return Promise.reject({http:r.status});
+      return r.json();
+    }).then(function(j){ remoteSha = null; return j; });
+  }
+
+  function applyRemote(obj){
+    if (!obj || !obj.services) return false;
+    state = normalise(obj);
+    remoteTs = state.ts || 0;
+    savedTs = remoteTs;
+    saveLocal();
+    render();
+    return true;
+  }
+
+  function loadRemote(quiet){
+    if (!quiet) say("Leggo i dati da GitHub\u2026");
+    return fetchRemote().then(function(obj){
+      if (!applyRemote(obj)) { say("Il file ferie.json non contiene un tabellone valido."); return; }
+      clearSay();
+    }).catch(function(e){
+      var local = readLocal();
+      if (local && local.services){ state = normalise(local); render(); }
+      var tail = local ? " Mostro l'ultima copia di questo browser." : "";
+      if (e && e.http === 404){
+        if (canEdit) say("Su GitHub non trovo ancora " + GH.path + ": il primo salvataggio lo crea.");
+        else say("Il file dei dati non \u00e8 ancora su GitHub, oppure il repository non \u00e8 raggiungibile." + tail);
+      }
+      else if (e && e.http === 401) say("Token non valido o scaduto: riattiva la modifica con un token nuovo.");
+      else if (e && e.http === 403) say("GitHub ha rifiutato la richiesta (limite di chiamate o permessi)." + tail);
+      else say("Non riesco a contattare GitHub." + tail);
+    });
+  }
+
+  function needSha(){
+    if (remoteSha || !token) return Promise.resolve();
+    return fetch(apiUrl(), {headers:headers(), cache:"no-store"}).then(function(r){
+      if (r.status === 404){ remoteSha = null; return; }   /* file da creare */
+      if (!r.ok) return Promise.reject({http:r.status});
+      return r.json().then(function(j){ remoteSha = j.sha; });
+    });
+  }
+
+  var saveTimer = null, pendingSave = false;
+  function scheduleSave(){
+    if (!canEdit) return;
+    pendingSave = true;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(pushSave, 1200);
+    refreshUI();
+  }
+
+  function pushSave(force){
+    if (!canEdit || saving) return;
+    saving = true; pendingSave = false; refreshUI();
+    var payload = JSON.stringify(state, null, 1);
+    var ts = state.ts;
+    needSha().then(function(){
+      var body = {
+        message: "Ferie: aggiornamento " + new Date().toLocaleString("it-IT"),
+        content: b64encode(payload),
+        branch: GH.branch
+      };
+      if (remoteSha) body.sha = remoteSha;
+      return fetch("https://api.github.com/repos/" + GH.owner + "/" + GH.repo + "/contents/" + GH.path, {
+        method:"PUT", headers:headers(), body:JSON.stringify(body)
+      });
+    }).then(function(r){
+      if (r.status === 409 || r.status === 422){
+        saving = false; remoteSha = null;
+        say("Il file su GitHub \u00e8 cambiato dopo l'ultima lettura. Premi Ricarica per prendere la versione remota, oppure Salva comunque per sovrascriverla.");
+        showOverwrite();
+        return null;
+      }
+      if (!r.ok) return Promise.reject({http:r.status});
+      return r.json();
+    }).then(function(j){
+      if (!j) return;
+      saving = false;
+      remoteSha = (j.content && j.content.sha) || null;
+      remoteTs = ts; savedTs = ts;
+      hideOverwrite();
+      clearSay();
+    }).catch(function(e){
+      saving = false;
+      if (e && e.http === 401) { canEdit = false; token = null; say("Token non valido o scaduto: riattiva la modifica."); }
+      else if (e && e.http === 403) say("GitHub ha rifiutato la scrittura: controlla che il token abbia il permesso Contents in scrittura.");
+      else say("Salvataggio non riuscito. Le modifiche restano in questo browser: riprova fra poco.");
+    });
+  }
+
+  function showOverwrite(){
+    var b = document.getElementById("forcebtn");
+    if (b) { b.hidden = false; return; }
+    b = document.createElement("button");
+    b.id = "forcebtn"; b.textContent = "Salva comunque";
+    b.addEventListener("click", function(){ remoteSha = null; clearSay(); pushSave(true); });
+    document.getElementById("reloadbtn").insertAdjacentElement("afterend", b);
+  }
+  function hideOverwrite(){
+    var b = document.getElementById("forcebtn");
+    if (b) b.hidden = true;
+  }
+
+  /* ---------- token ---------- */
+  function setToken(t){
+    token = t || null;
+    try{
+      if (token) localStorage.setItem("ferie:token", token);
+      else localStorage.removeItem("ferie:token");
+    }catch(e){}
+  }
+  function activate(t){
+    var probe = t;
+    document.getElementById("ghnote").textContent = "Controllo il token\u2026";
+    fetch("https://api.github.com/repos/" + GH.owner + "/" + GH.repo, {
+      headers:{"Accept":"application/vnd.github+json","Authorization":"Bearer " + probe,
+               "X-GitHub-Api-Version":"2022-11-28"}, cache:"no-store"
+    }).then(function(r){
+      if (r.status === 401) return Promise.reject("Token rifiutato da GitHub: controlla di averlo copiato intero.");
+      if (r.status === 404) return Promise.reject("Il token non vede il repository " + GH.owner + "/" + GH.repo + ": controlla che sia autorizzato su questo repository.");
+      if (!r.ok) return Promise.reject("GitHub ha risposto con un errore (" + r.status + ").");
+      return r.json();
+    }).then(function(j){
+      if (j.permissions && j.permissions.push === false)
+        return Promise.reject("Il token legge ma non scrive: serve il permesso Contents in scrittura.");
+      setToken(probe);
+      canEdit = true;
+      document.getElementById("ghnote").textContent = "";
+      document.getElementById("ghbox").hidden = true;
+      document.getElementById("ghforget").hidden = false;
+      remoteSha = null;
+      return loadRemote(true);
+    }).catch(function(err){
+      document.getElementById("ghnote").textContent = (typeof err === "string") ? err
+        : "Non riesco a contattare GitHub.";
+    });
+  }
+  document.getElementById("editbtn").addEventListener("click", function(){
+    var box = document.getElementById("ghbox");
+    box.hidden = !box.hidden;
+    if (!box.hidden){
+      document.getElementById("ghforget").hidden = !token;
+      document.getElementById("ghtoken").focus();
+    }
+  });
+  document.getElementById("ghsave").addEventListener("click", function(){
+    var v = document.getElementById("ghtoken").value.trim();
+    if (!v){ document.getElementById("ghnote").textContent = "Incolla il token nel campo."; return; }
+    document.getElementById("ghtoken").value = "";
+    activate(v);
+  });
+  document.getElementById("ghtoken").addEventListener("keydown", function(e){
+    if (e.key === "Enter") document.getElementById("ghsave").click();
+  });
+  document.getElementById("ghforget").addEventListener("click", function(){
+    setToken(null); canEdit = false; remoteSha = null;
+    document.getElementById("ghforget").hidden = true;
+    document.getElementById("ghnote").textContent = "Token rimosso da questo browser.";
+    render(); refreshUI();
+  });
+  document.getElementById("reloadbtn").addEventListener("click", function(){
+    hideOverwrite(); loadRemote(false);
+  });
+  window.addEventListener("beforeunload", function(e){
+    if (canEdit && (pendingSave || saving)){ e.preventDefault(); e.returnValue = ""; }
+  });
+  /* rientrando sulla scheda, chi consulta riprende i dati freschi */
+  document.addEventListener("visibilitychange", function(){
+    if (document.visibilityState === "visible" && !canEdit && !statusMsg) loadRemote(true);
+  });
+
+  /* ---------- stampa ----------
+     Una vista a parte: tabella fissa che sta in una pagina A4 orizzontale,
+     una pagina per mese, con i soli servizi scelti. */
+  function countsFor(svc, y, m){
+    var n = daysIn(y,m), c = [], over = [];
+    for (var d=1; d<=n; d++){
+      var date = iso(y,m,d), k = 0;
+      svc.members.forEach(function(pid){ if (isOn(pid, date)) k++; });
+      c[d] = k; over[d] = k > (svc.max || 1);
+    }
+    return {c:c, over:over};
+  }
+
+  function printPage(y, m, svcs){
+    var n = daysIn(y,m), hol = holidays(y);
+    var page = document.createElement("div"); page.className = "pt";
+    var h = document.createElement("h3");
+    h.textContent = "Ferie \u2014 " + MESI[m] + " " + y +
+      (svcs.length === 1 ? "  \u00b7  " + (svcs[0].name || "servizio senza nome") : "");
+    page.appendChild(h);
+    var leg = document.createElement("p"); leg.className = "leg";
+    leg.textContent = "Casella scura: in ferie. Casella nera con \u00ab!\u00bb: oltre il massimo di assenze del servizio. "
+      + "Nella riga del servizio il numero di assenti per giorno.";
+    page.appendChild(leg);
+
+    var t = document.createElement("table"); t.className = "pr";
+    var cols = document.createElement("colgroup");
+    var cw = document.createElement("col"); cw.style.width = "36mm"; cols.appendChild(cw);
+    for (var i=0;i<n;i++) cols.appendChild(document.createElement("col"));
+    t.appendChild(cols);
+
+    var days = [];
+    for (var d=1; d<=n; d++){
+      var date = iso(y,m,d), wd = new Date(y,m,d).getDay();
+      days.push({d:d, date:date, wd:wd, off:(wd===0||wd===6||!!hol[date])});
+    }
+
+    var thead = document.createElement("thead");
+    var rw = document.createElement("tr"); rw.className = "wdr";
+    rw.appendChild(document.createElement("th"));
+    days.forEach(function(x){
+      var th = document.createElement("th");
+      th.className = x.off ? "off" : ""; th.textContent = WD[x.wd];
+      rw.appendChild(th);
+    });
+    var rd = document.createElement("tr");
+    var corner = document.createElement("th"); corner.className = "who"; rd.appendChild(corner);
+    days.forEach(function(x){
+      var th = document.createElement("th");
+      th.className = x.off ? "off" : ""; th.textContent = x.d;
+      rd.appendChild(th);
+    });
+    thead.appendChild(rw); thead.appendChild(rd); t.appendChild(thead);
+
+    svcs.forEach(function(svc){
+      var tb = document.createElement("tbody");
+      var info = countsFor(svc, y, m);
+      var band = document.createElement("tr"); band.className = "sv";
+      var bth = document.createElement("th"); bth.className = "who";
+      bth.textContent = (svc.name || "servizio senza nome") + "  (max " + (svc.max||1) + ")";
+      band.appendChild(bth);
+      days.forEach(function(x){
+        var td = document.createElement("td");
+        if (info.over[x.d]) td.className = "over";
+        else if (x.off) td.className = "off";
+        td.textContent = info.c[x.d] ? info.c[x.d] : "";
+        band.appendChild(td);
+      });
+      tb.appendChild(band);
+
+      svc.members.forEach(function(pid){
+        var p = person(pid);
+        if (!p) return;
+        var tr = document.createElement("tr");
+        var th = document.createElement("th"); th.className = "who";
+        th.textContent = p.name || "\u2014";
+        tr.appendChild(th);
+        days.forEach(function(x){
+          var td = document.createElement("td");
+          var on = isOn(pid, x.date);
+          var cls = [];
+          if (x.off) cls.push("off");
+          if (on) cls.push("on");
+          if (on && info.over[x.d]) cls.push("bad");
+          td.className = cls.join(" ");
+          if (on && info.over[x.d]) td.textContent = "!";
+          tr.appendChild(td);
+        });
+        tb.appendChild(tr);
+      });
+      t.appendChild(tb);
+    });
+    page.appendChild(t);
+    return page;
+  }
+
+  function fillPrintScope(){
+    var sel = document.getElementById("printscope");
+    var prev = sel.value;
+    sel.textContent = "";
+    var o = document.createElement("option");
+    o.value = "*"; o.textContent = "tutti i servizi";
+    sel.appendChild(o);
+    state.services.forEach(function(s){
+      var x = document.createElement("option");
+      x.value = s.id; x.textContent = s.name || "servizio senza nome";
+      sel.appendChild(x);
+    });
+    sel.value = prev && [].some.call(sel.options, function(q){ return q.value === prev; }) ? prev : "*";
+  }
+
+  function doPrint(){
+    var scope = document.getElementById("printscope").value;
+    var range = document.getElementById("printrange").value;
+    var svcs = (scope === "*") ? state.services
+             : state.services.filter(function(s){ return s.id === scope; });
+    if (!svcs.length) return;
+    var area = document.getElementById("printarea");
+    area.textContent = "";
+    if (range === "year"){
+      for (var m=0; m<12; m++) area.appendChild(printPage(view.y, m, svcs));
+    } else {
+      area.appendChild(printPage(view.y, view.m, svcs));
+    }
+    window.print();
+  }
+  document.getElementById("printbtn").addEventListener("click", doPrint);
+  window.addEventListener("afterprint", function(){
+    document.getElementById("printarea").textContent = "";
+  });
+
+  /* ---------- ponte fra dispositivi ----------
+     Il pannello di Claude e la pagina aperta col link hanno archivi locali
+     separati: questo riquadro serve a portare i dati dall'uno all'altro. */
+  var dbox = document.getElementById("databox");
+  var darea = document.getElementById("dataarea");
+  function dnote(t){ document.getElementById("datanote").textContent = t; }
+  document.getElementById("datatoggle").addEventListener("click", function(){
+    dbox.hidden = !dbox.hidden;
+    if (!dbox.hidden){
+      darea.value = JSON.stringify(state);
+      dnote("");
+      darea.focus(); darea.select();
+    }
+  });
+  document.getElementById("datacopy").addEventListener("click", function(){
+    darea.value = JSON.stringify(state);
+    darea.focus(); darea.select();
+    var done = false;
+    try{ done = document.execCommand("copy"); }catch(e){}
+    if (done) dnote("Copiato.");
+    else if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(darea.value).then(function(){ dnote("Copiato."); })
+        .catch(function(){ dnote("Copia a mano: il testo \u00e8 gi\u00e0 selezionato."); });
+    } else dnote("Copia a mano: il testo \u00e8 gi\u00e0 selezionato.");
+  });
+  /* la copia nel browser può essere diversa da quella a schermo: è il lavoro
+     fatto prima che i dati passassero dentro la pagina, e va recuperabile */
+  document.getElementById("datalocal").addEventListener("click", function(){
+    var loc = readLocal();
+    if (!loc){ dnote("In questo browser non c'\u00e8 nessuna copia salvata."); return; }
+    darea.value = JSON.stringify(loc);
+    darea.focus(); darea.select();
+    var svs = (loc.services || []).map(function(s){ return s.name || "senza nome"; }).join(", ");
+    var when = loc.ts ? " del " + stamp(loc.ts) : "";
+    dnote("Copia del browser" + when + ": " + (svs || "nessun servizio") + ". Se sono i dati giusti, copiala.");
+  });
+
+  var loadBtn = document.getElementById("dataload");
+  var loadArmed = null;
+  loadBtn.addEventListener("click", function(){
+    var o;
+    try{ o = JSON.parse(darea.value); }
+    catch(e){ dnote("Il testo incollato non \u00e8 valido."); return; }
+    if (!o || !o.services || !o.services.length){ dnote("Nel testo incollato non c'\u00e8 nessun servizio."); return; }
+    if (!loadArmed){
+      loadBtn.textContent = "Confermi? Sostituisce tutto";
+      loadArmed = setTimeout(function(){
+        loadBtn.textContent = "Sostituisci con i dati incollati"; loadArmed = null;
+      }, 4000);
+      return;
+    }
+    clearTimeout(loadArmed); loadArmed = null;
+    loadBtn.textContent = "Sostituisci con i dati incollati";
+    state = normalise(o);
+    state.ts = Date.now();
+    saveLocal(); render(); scheduleSave();
+    dbox.hidden = true;
+    say(canEdit ? "Dati caricati: li sto salvando su GitHub\u2026"
+                : "Dati caricati su questo dispositivo (senza token non vanno su GitHub).");
+    setTimeout(clearSay, 2500);
+  });
+
+  /* ---------- avvio ----------
+     Si parte da quello che c'è in questo browser, così il tabellone appare
+     subito, poi si sostituisce con la versione di GitHub appena arriva. */
+  var cached = readLocal();
+  if (cached && cached.services) state = normalise(cached);
+  updateLabel(); render();
+
+  try{ token = localStorage.getItem("ferie:token") || null; }catch(e){ token = null; }
+  if (token){
+    canEdit = true;
+    document.getElementById("ghforget").hidden = false;
+    render();
+  }
+  refreshUI();
+  loadRemote(false).then(function(){
+    /* se la lettura ha sciolto collegamenti vecchi, la versione corretta va salvata */
+    if (didMigrate && canEdit){ didMigrate = false; state.ts = Date.now(); scheduleSave(); }
+  });
+
+})();
+</script>
+</body>
+</html>
