@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791375642737,
+ "ts": 1791375646128,
  "people": [
   {
    "id": "pgria9i",
@@ -105,6 +105,10 @@
   {
    "id": "pbc5ww3",
    "name": "SEKOU"
+  },
+  {
+   "id": "pzrxx2l",
+   "name": ""
   }
  ],
  "services": [
@@ -196,7 +200,8 @@
    "name": "PULIZIE",
    "max": 1,
    "members": [
-    "poa0uc1"
+    "poa0uc1",
+    "pzrxx2l"
    ]
   }
  ],
