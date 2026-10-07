@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791375678940,
+ "ts": 1791375686568,
  "people": [
   {
    "id": "pgria9i",
@@ -105,6 +105,10 @@
   {
    "id": "pbc5ww3",
    "name": "SEKOU"
+  },
+  {
+   "id": "pcbl15w",
+   "name": ""
   }
  ],
  "services": [
@@ -169,7 +173,8 @@
    "name": "ACCOGLIENZA COMUNITARIA",
    "max": 1,
    "members": [
-    "pyuro1s"
+    "pyuro1s",
+    "pcbl15w"
    ]
   },
   {
