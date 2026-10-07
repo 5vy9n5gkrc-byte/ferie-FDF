@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791375431654,
+ "ts": 1791375437887,
  "people": [
   {
    "id": "pgria9i",
@@ -81,6 +81,10 @@
   {
    "id": "psetsx2",
    "name": "GIORGIO"
+  },
+  {
+   "id": "prmgiqh",
+   "name": ""
   }
  ],
  "services": [
@@ -135,7 +139,8 @@
    "name": "PENSIONATO INTEGRATO",
    "max": 1,
    "members": [
-    "p9lz3vx"
+    "p9lz3vx",
+    "prmgiqh"
    ]
   },
   {
