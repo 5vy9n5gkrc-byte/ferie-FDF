@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791375471365,
+ "ts": 1791375473761,
  "people": [
   {
    "id": "pgria9i",
@@ -89,6 +89,10 @@
   {
    "id": "p0y6ncg",
    "name": "RINALDO"
+  },
+  {
+   "id": "pa0cfui",
+   "name": ""
   }
  ],
  "services": [
@@ -168,7 +172,8 @@
    "name": "MANUTENZIONI",
    "max": 1,
    "members": [
-    "p0y6ncg"
+    "p0y6ncg",
+    "pa0cfui"
    ]
   }
  ],
