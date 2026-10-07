@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791375932313,
+ "ts": 1791375997898,
  "people": [
   {
    "id": "pgria9i",
@@ -125,6 +125,10 @@
   {
    "id": "p3hftcd",
    "name": "OSASU"
+  },
+  {
+   "id": "pg8r762",
+   "name": ""
   }
  ],
  "services": [
@@ -169,7 +173,8 @@
    "members": [
     "pbmqkp4",
     "pxt74a7",
-    "pvz169o"
+    "pvz169o",
+    "pg8r762"
    ]
   },
   {
