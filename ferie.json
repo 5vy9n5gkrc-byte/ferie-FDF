@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791376187029,
+ "ts": 1791376201969,
  "people": [
   {
    "id": "pgria9i",
@@ -61,10 +61,6 @@
   {
    "id": "prmgiqh",
    "name": "GIOVANNA"
-  },
-  {
-   "id": "p0y6ncg",
-   "name": "GIANFRANCO"
   },
   {
    "id": "pa0cfui",
@@ -210,7 +206,7 @@
    "name": "MANUTENZIONI",
    "max": 1,
    "members": [
-    "p0y6ncg",
+    "piqpyih",
     "pa0cfui",
     "pbc5ww3"
    ]
