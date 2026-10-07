@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791375442959,
+ "ts": 1791375454281,
  "people": [
   {
    "id": "pgria9i",
@@ -85,6 +85,10 @@
   {
    "id": "prmgiqh",
    "name": "GIOVANNA"
+  },
+  {
+   "id": "p0y6ncg",
+   "name": ""
   }
  ],
  "services": [
@@ -157,6 +161,14 @@
    "max": 1,
    "members": [
     "psetsx2"
+   ]
+  },
+  {
+   "id": "so2nkfk",
+   "name": "",
+   "max": 1,
+   "members": [
+    "p0y6ncg"
    ]
   }
  ],
