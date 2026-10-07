@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791376110245,
+ "ts": 1791376145329,
  "people": [
   {
    "id": "pgria9i",
@@ -57,10 +57,6 @@
   {
    "id": "pyuro1s",
    "name": "LAURA"
-  },
-  {
-   "id": "psetsx2",
-   "name": "GIORGIO"
   },
   {
    "id": "prmgiqh",
@@ -205,7 +201,7 @@
    "name": "HOUSING",
    "max": 1,
    "members": [
-    "psetsx2",
+    "poa0uc1",
     "piqpyih"
    ]
   },
