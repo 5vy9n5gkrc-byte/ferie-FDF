@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791375559288,
+ "ts": 1791375567865,
  "people": [
   {
    "id": "pgria9i",
@@ -101,6 +101,10 @@
   {
    "id": "poa0uc1",
    "name": "BLESSING"
+  },
+  {
+   "id": "piqpyih",
+   "name": ""
   }
  ],
  "services": [
@@ -173,7 +177,8 @@
    "name": "HOUSING",
    "max": 1,
    "members": [
-    "psetsx2"
+    "psetsx2",
+    "piqpyih"
    ]
   },
   {
