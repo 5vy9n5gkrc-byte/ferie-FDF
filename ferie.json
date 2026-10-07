@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791375784932,
+ "ts": 1791375791923,
  "people": [
   {
    "id": "pgria9i",
@@ -121,6 +121,10 @@
   {
    "id": "pd2bhsc",
    "name": "FRANCESCA"
+  },
+  {
+   "id": "p6d14af",
+   "name": ""
   }
  ],
  "services": [
@@ -216,7 +220,8 @@
    "name": "PULIZIE",
    "max": 1,
    "members": [
-    "poa0uc1"
+    "poa0uc1",
+    "p6d14af"
    ]
   }
  ],
