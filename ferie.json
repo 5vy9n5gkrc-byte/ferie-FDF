@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791375796290,
+ "ts": 1791375797960,
  "people": [
   {
    "id": "pgria9i",
@@ -125,6 +125,10 @@
   {
    "id": "p6d14af",
    "name": "PIERINO"
+  },
+  {
+   "id": "pcz42na",
+   "name": ""
   }
  ],
  "services": [
@@ -221,7 +225,8 @@
    "max": 1,
    "members": [
     "poa0uc1",
-    "p6d14af"
+    "p6d14af",
+    "pcz42na"
    ]
   }
  ],
