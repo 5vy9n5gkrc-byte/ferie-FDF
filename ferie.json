@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791375603085,
+ "ts": 1791375614714,
  "people": [
   {
    "id": "pgria9i",
@@ -101,6 +101,10 @@
   {
    "id": "piqpyih",
    "name": "GIANFRANCO"
+  },
+  {
+   "id": "pbc5ww3",
+   "name": ""
   }
  ],
  "services": [
@@ -183,7 +187,8 @@
    "max": 1,
    "members": [
     "p0y6ncg",
-    "pa0cfui"
+    "pa0cfui",
+    "pbc5ww3"
    ]
   },
   {
