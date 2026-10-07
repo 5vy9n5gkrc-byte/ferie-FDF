@@ -661,7 +661,11 @@
     i.className = "nm"; i.value = val || ""; i.placeholder = ph; i.spellcheck = false;
     if (bold) i.style.fontWeight = "600";
     if (!canEdit){ i.readOnly = true; i.tabIndex = -1; }
-    else i.addEventListener("change", function(){ onChange(i.value); });
+    /* il permesso si rilegge al momento della modifica, non solo al disegno */
+    i.addEventListener("change", function(){
+      if (!canEdit) return;
+      onChange(i.value);
+    });
     return i;
   }
   function removeBtn(title, action){
@@ -1156,6 +1160,9 @@
       document.getElementById("ghbox").hidden = true;
       document.getElementById("ghforget").hidden = false;
       remoteSha = null;
+      /* ridisegna ORA: i comandi di modifica nascono col disegno della griglia,
+         quindi non vanno fatti dipendere dall'esito della lettura */
+      render(); refreshUI();
       return loadRemote(true);
     }).catch(function(err){
       document.getElementById("ghnote").textContent = (typeof err === "string") ? err
