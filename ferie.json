@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791375261846,
+ "ts": 1791375265765,
  "people": [
   {
    "id": "pgria9i",
@@ -89,6 +89,10 @@
   {
    "id": "pyuro1s",
    "name": ""
+  },
+  {
+   "id": "psetsx2",
+   "name": ""
   }
  ],
  "services": [
@@ -154,6 +158,14 @@
    "max": 1,
    "members": [
     "pyuro1s"
+   ]
+  },
+  {
+   "id": "srryom6",
+   "name": "",
+   "max": 1,
+   "members": [
+    "psetsx2"
    ]
   }
  ],
