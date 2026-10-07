@@ -1,0 +1,151 @@
+{
+ "v": 3,
+ "ts": 1791374624721,
+ "people": [
+  {
+   "id": "pgria9i",
+   "name": "Dipendente 1"
+  },
+  {
+   "id": "pboojfq",
+   "name": "Dipendente 2"
+  },
+  {
+   "id": "pd7a367",
+   "name": "Dipendente 3"
+  },
+  {
+   "id": "pfkb4pu",
+   "name": "Dipendente 4"
+  },
+  {
+   "id": "pz8l7h9",
+   "name": "Dipendente 5"
+  },
+  {
+   "id": "pbmqkp4",
+   "name": "Dipendente 6"
+  },
+  {
+   "id": "puhdunh",
+   "name": "Dipendente 7"
+  },
+  {
+   "id": "pvxqyyr",
+   "name": "Dipendente 8"
+  },
+  {
+   "id": "px0cqql",
+   "name": "Dipendente 9"
+  },
+  {
+   "id": "pikcyc3",
+   "name": "Dipendente 10"
+  },
+  {
+   "id": "pjc92s4",
+   "name": "Dipendente 11"
+  },
+  {
+   "id": "pp3005p",
+   "name": "Dipendente 12"
+  },
+  {
+   "id": "peq9co0",
+   "name": "Dipendente 13"
+  },
+  {
+   "id": "prp8zc1",
+   "name": "Dipendente 14"
+  },
+  {
+   "id": "pyrx5nl",
+   "name": "Dipendente 15"
+  },
+  {
+   "id": "pjjdygo",
+   "name": "Dipendente 16"
+  },
+  {
+   "id": "pxt74a7",
+   "name": "Dipendente 17"
+  },
+  {
+   "id": "pvz169o",
+   "name": "Dipendente 18"
+  },
+  {
+   "id": "paj1mm0",
+   "name": "Dipendente 19"
+  },
+  {
+   "id": "pimhrlp",
+   "name": "Dipendente 20"
+  }
+ ],
+ "services": [
+  {
+   "id": "s229b98",
+   "name": "Servizio 1",
+   "max": 1,
+   "members": [
+    "pgria9i",
+    "pboojfq",
+    "pd7a367",
+    "pfkb4pu",
+    "pz8l7h9"
+   ]
+  },
+  {
+   "id": "s6b8vwo",
+   "name": "Servizio 2",
+   "max": 1,
+   "members": [
+    "pbmqkp4",
+    "puhdunh",
+    "pvxqyyr",
+    "px0cqql",
+    "pikcyc3"
+   ]
+  },
+  {
+   "id": "s281z3x",
+   "name": "Servizio 3",
+   "max": 1,
+   "members": [
+    "pjc92s4",
+    "pp3005p",
+    "peq9co0",
+    "prp8zc1",
+    "pyrx5nl"
+   ]
+  },
+  {
+   "id": "scufa0g",
+   "name": "Servizio 4",
+   "max": 1,
+   "members": [
+    "pjjdygo",
+    "pxt74a7",
+    "pvz169o",
+    "paj1mm0",
+    "pimhrlp"
+   ]
+  }
+ ],
+ "leave": {
+  "pz8l7h9": {
+   "2026-10-04": 1
+  },
+  "pfkb4pu": {
+   "2026-10-06": 1
+  },
+  "pd7a367": {
+   "2026-10-06": 1,
+   "2026-10-07": 1,
+   "2026-10-08": 1,
+   "2026-10-09": 1,
+   "2026-10-10": 1
+  }
+ }
+}
