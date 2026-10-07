@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791375912793,
+ "ts": 1791375915977,
  "people": [
   {
    "id": "pgria9i",
@@ -61,10 +61,6 @@
   {
    "id": "pvz169o",
    "name": "AMINE"
-  },
-  {
-   "id": "pimhrlp",
-   "name": "Dipendente 20"
   },
   {
    "id": "p9lz3vx",
@@ -183,8 +179,7 @@
    "members": [
     "pbmqkp4",
     "pxt74a7",
-    "pvz169o",
-    "pimhrlp"
+    "pvz169o"
    ]
   },
   {
