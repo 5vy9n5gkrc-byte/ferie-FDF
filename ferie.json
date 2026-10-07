@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791375386550,
+ "ts": 1791375387806,
  "people": [
   {
    "id": "pgria9i",
@@ -13,10 +13,6 @@
   {
    "id": "pd7a367",
    "name": "GIANFRANCO"
-  },
-  {
-   "id": "pz8l7h9",
-   "name": "Dipendente 5"
   },
   {
    "id": "pbmqkp4",
@@ -95,8 +91,7 @@
    "members": [
     "pgria9i",
     "pboojfq",
-    "pd7a367",
-    "pz8l7h9"
+    "pd7a367"
    ]
   },
   {
