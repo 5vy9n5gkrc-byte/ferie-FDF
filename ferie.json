@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791375265765,
+ "ts": 1791375269710,
  "people": [
   {
    "id": "pgria9i",
@@ -93,6 +93,10 @@
   {
    "id": "psetsx2",
    "name": ""
+  },
+  {
+   "id": "p4ec2fw",
+   "name": ""
   }
  ],
  "services": [
@@ -166,6 +170,14 @@
    "max": 1,
    "members": [
     "psetsx2"
+   ]
+  },
+  {
+   "id": "swe9ciu",
+   "name": "",
+   "max": 1,
+   "members": [
+    "p4ec2fw"
    ]
   }
  ],
