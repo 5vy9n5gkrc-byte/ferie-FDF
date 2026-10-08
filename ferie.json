@@ -1,6 +1,6 @@
 {
  "v": 3,
- "ts": 1791448705463,
+ "ts": 1791448818275,
  "people": [
   {
    "id": "pgria9i",
@@ -240,7 +240,8 @@
   }
  },
  "accrual": {
-  "pgria9i": 2.5
+  "pgria9i": 2.5,
+  "pboojfq": 2.5
  },
  "done": {},
  "balance": {
