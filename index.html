@@ -63,6 +63,16 @@
   .mnav .today{width:auto; padding:0 11px; font-size:13px; color:var(--ink-2); white-space:nowrap}
   .mnav button:hover{background:var(--shade)}
 
+  .robar{
+    display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px;
+    border:1px solid var(--rule); border-left:5px solid var(--ink-3);
+    background:var(--shade); padding:11px 14px; margin-bottom:14px;
+  }
+  .robar[hidden]{display:none}
+  .rotxt{font-size:13.5px}
+  .rotxt b{font-weight:700}
+  .robar button{font:inherit; font-size:13px; padding:7px 12px; background:var(--panel); border:1px solid var(--rule); border-radius:3px}
+  .robar button:hover{background:var(--paper)}
   .status{
     border-left:5px solid var(--rule); background:var(--panel);
     padding:12px 16px; margin-bottom:18px; display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
@@ -82,7 +92,7 @@
   table{border-collapse:separate; border-spacing:0; width:max-content; min-width:100%; user-select:none; -webkit-user-select:none}
   table input{user-select:text; -webkit-user-select:text}
   th,td{padding:0; margin:0; font-weight:400}
-  .sticky{position:sticky; left:0; z-index:3; background:var(--panel); border-right:1px solid var(--rule); width:206px; min-width:206px}
+  .sticky{position:sticky; left:0; z-index:3; background:var(--panel); border-right:1px solid var(--rule); width:262px; min-width:262px}
   thead th{position:sticky; top:0; z-index:4; background:var(--panel)}
   thead th.sticky{z-index:6}
   .wd,.dn{width:30px; min-width:30px; text-align:center; font-size:11px; color:var(--ink-2); border-bottom:1px solid var(--rule-2)}
@@ -112,6 +122,12 @@
     flex:none; font-size:10px; font-weight:600; color:var(--link); background:var(--link-bg);
     border-radius:2px; padding:2px 4px; line-height:1.1; cursor:help;
   }
+  .res{
+    flex:none; font-size:10.5px; font-weight:600; color:var(--leave); background:var(--shade);
+    border:1px solid var(--rule); border-radius:2px; padding:2px 4px; line-height:1.1;
+    white-space:nowrap; cursor:help;
+  }
+  .res[hidden]{display:none}
   .tot{flex:none; font-size:11px; color:var(--ink-3); min-width:1.6em; text-align:right}
   .picker{font:inherit; font-size:11.5px; max-width:118px; padding:2px; background:var(--panel); color:inherit; border:1px solid var(--leave); border-radius:3px}
   td.cell{
@@ -154,6 +170,39 @@
   .actions button:disabled{opacity:.5; cursor:default}
   #pub.dirty{background:var(--leave); border-color:var(--leave); color:var(--leave-ink); font-weight:600}
   #pub.dirty:hover{background:var(--leave)}
+  #yearbox{margin-top:30px; padding-top:22px; border-top:1px solid var(--rule)}
+  .yhead{display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin-bottom:6px}
+  .yhead h2{margin:0}
+  .yhead button{font:inherit; font-size:13px; padding:7px 12px; background:var(--panel); border:1px solid var(--rule); border-radius:3px}
+  .yhead button:hover{background:var(--shade)}
+  .ywrap{overflow-x:auto; max-width:100%; border:1px solid var(--rule); background:var(--panel)}
+  table#ytable{border-collapse:separate; border-spacing:0; width:max-content; min-width:100%}
+  #ytable th, #ytable td{padding:0; font-weight:400; border-bottom:1px solid var(--rule-2)}
+  #ytable thead th{position:sticky; background:var(--panel); font-size:11px; color:var(--ink-2); text-align:center}
+  #ytable thead tr.ym th{top:0; height:26px; font-size:12px; font-weight:600; color:var(--ink);
+    border-bottom:1px solid var(--rule-2); border-left:1px solid var(--rule)}
+  #ytable thead tr.ys th{top:26px; height:22px; border-bottom:1px solid var(--rule); width:44px; min-width:44px}
+  #ytable thead tr.ys th.mcol{border-left:1px solid var(--rule); width:38px; min-width:38px}
+  #ytable td.mcol{border-left:1px solid var(--rule); width:38px; min-width:38px;
+    background:var(--shade); color:var(--ink-2); font-size:12px}
+  #ytable thead tr.ym th.mnow{color:var(--leave)}
+  #ytable th.yname{position:sticky; left:0; z-index:3; background:var(--panel); border-right:1px solid var(--rule);
+    width:190px; min-width:190px; text-align:left; padding:0 10px; font-size:13px}
+  #ytable thead th.yname{z-index:5}
+  #ytable th.ymat{width:74px; min-width:74px; text-align:center; border-right:1px solid var(--rule)}
+  #ytable td.ymat{border-right:1px solid var(--rule); background:var(--shade)}
+  #ytable tbody tr:hover th.yname{background:var(--shade)}
+  #ytable td{text-align:center}
+  #ytable td.now{box-shadow:inset 0 0 0 2px var(--leave)}
+  .ycell{width:100%; height:30px; border:0; background:transparent; color:inherit; font:inherit; font-size:12.5px;
+    text-align:center; padding:0; border-radius:0}
+  .ycell:focus{outline:2px solid var(--leave); outline-offset:-2px; background:var(--paper)}
+  .ycell:read-only{cursor:default}
+  .ycell.set{font-weight:600}
+  .ymatin{width:58px; height:26px; border:1px solid transparent; background:transparent; color:inherit; font:inherit;
+    font-size:12.5px; text-align:center; border-radius:3px}
+  .ymatin:hover{border-color:var(--rule)}
+  .ymatin:focus{border-color:var(--leave); background:var(--panel); outline:none}
   #ghbox{margin-top:24px; border:1px solid var(--rule); background:var(--panel); padding:14px 16px}
   #ghtoken{width:100%; max-width:420px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px;
     padding:8px; border:1px solid var(--rule); border-radius:3px; background:var(--paper); color:var(--ink)}
@@ -170,7 +219,8 @@
   @media (max-width:560px){
     .wrap{padding:14px 10px 48px}
     h1{font-size:25px}
-    .sticky{width:150px; min-width:150px}
+    .sticky{width:196px; min-width:196px}
+    .pname input.nm{font-size:12.5px}
     .pname{padding-left:12px}
     .status .n{font-size:25px}
   }
@@ -182,6 +232,7 @@
     @page{size:A4 landscape; margin:9mm}
     html,body{background:#fff; color:#000; overflow:visible; -webkit-print-color-adjust:exact; print-color-adjust:exact}
     .wrap > *{display:none !important}
+    .robar{display:none !important}
     #printarea{display:block !important}
     /* a schermo l'intestazione è incollata in alto: in stampa va azzerata,
        altrimenti Safari la posiziona a fondo tabella */
@@ -195,7 +246,7 @@
     .pt .leg{font-size:7pt; color:#444; margin:0 0 2mm}
     table.pr{border-collapse:collapse; width:100%; table-layout:fixed; font-size:7pt; color:#000}
     table.pr th, table.pr td{border:.4pt solid #8a8a8a; height:4.8mm; text-align:center; padding:0; font-weight:400}
-    table.pr th.who{text-align:left; padding:0 1.2mm; width:36mm; overflow:hidden; white-space:nowrap}
+    table.pr th.who{text-align:left; padding:0 1.2mm; width:40mm; overflow:hidden; white-space:nowrap}
     table.pr tr.sv th, table.pr tr.sv td{background:#e4e4e4; font-weight:700; -webkit-print-color-adjust:exact; print-color-adjust:exact}
     table.pr tr.sv th.who{font-size:8pt}
     table.pr td.off{background:#eeeeee; -webkit-print-color-adjust:exact; print-color-adjust:exact}
@@ -204,6 +255,10 @@
     table.pr td.bad{background:#000; color:#fff; font-weight:700; -webkit-print-color-adjust:exact; print-color-adjust:exact}
     table.pr td.over{background:#bdbdbd; font-weight:700; -webkit-print-color-adjust:exact; print-color-adjust:exact}
     table.pr .wdr th{height:3.4mm; font-size:5.5pt; color:#555}
+    table.pr.py{font-size:6pt}
+    table.pr.py th, table.pr.py td{height:4.4mm}
+    table.pr.py th.who{width:40mm; font-size:6.5pt}
+    table.pr.py td.mcol, table.pr.py th.mcol{background:#ececec; -webkit-print-color-adjust:exact; print-color-adjust:exact}
   }
   @media (prefers-reduced-motion:no-preference){
     .status{transition:background-color .18s ease, border-color .18s ease}
@@ -224,6 +279,11 @@
       <button class="today" id="btoday">Oggi</button>
     </div>
   </header>
+
+  <div class="robar" id="robar" hidden>
+    <span class="rotxt"><b>Sola lettura.</b> Per scrivere serve il token di GitHub su questo browser.</span>
+    <button id="roact">Attiva modifica</button>
+  </div>
 
   <div class="status" id="status"></div>
 
@@ -248,6 +308,15 @@
       <p class="note">I nomi sono indipendenti: scrivere due volte lo stesso nome crea due persone distinte. Per chi lavora su pi&ugrave; servizi usa il pulsante <b>&#8644;</b> sulla sua riga e scegli la riga dell&rsquo;altro servizio: da quel momento &egrave; una persona sola, le ferie si segnano una volta e compaiono in tutti i suoi servizi. Dallo stesso pulsante puoi anche separarla di nuovo.</p>
     </section>
   </div>
+
+  <section id="yearbox">
+    <div class="yhead">
+      <h2 id="ytitle">Prospetto annuale</h2>
+      <button id="yprint">Stampa solo il prospetto</button>
+    </div>
+    <p class="note" id="yhint" style="margin:0 0 10px"></p>
+    <div class="ywrap"><table id="ytable"></table></div>
+  </section>
 
   <div class="actions">
     <button id="addsvc">Aggiungi servizio</button>
@@ -345,7 +414,7 @@
       }
       services.push({id:uid("s"), name:"Servizio "+i, max:1, members:members});
     }
-    return {v:DATA_V, ts:0, people:people, services:services, leave:{}};
+    return {v:DATA_V, ts:0, people:people, services:services, leave:{}, accrual:{}, done:{}, balance:{}};
   }
   function initialView(){
     var now = new Date(), y = now.getFullYear(), m = now.getMonth();
@@ -366,12 +435,16 @@
     return state.services.filter(function(s){ return s.members.indexOf(pid) >= 0; });
   }
   /* togliere una riga rimuove la persona solo dal servizio; se non è più in nessuno, esce dall'anagrafica */
+  function forget(pid){
+    state.people = state.people.filter(function(p){ return p.id !== pid; });
+    delete state.leave[pid];
+    if (state.accrual) delete state.accrual[pid];
+    if (state.done) delete state.done[pid];
+    if (state.balance) delete state.balance[pid];
+  }
   function dropFromService(svc, pid){
     svc.members = svc.members.filter(function(id){ return id !== pid; });
-    if (!servicesOf(pid).length){
-      state.people = state.people.filter(function(p){ return p.id !== pid; });
-      delete state.leave[pid];
-    }
+    if (!servicesOf(pid).length) forget(pid);
   }
 
   /* ---------- calendario ---------- */
@@ -533,6 +606,8 @@
           chip.title = "Stessa persona anche in: " + others.map(function(s){ return s.name || "servizio senza nome"; }).join(", ");
           pb.appendChild(chip);
         }
+        var res = document.createElement("span"); res.className = "res";
+        pb.appendChild(res);
         var tot = document.createElement("span"); tot.className = "tot";
         pb.appendChild(tot);
         if (canEdit){
@@ -545,7 +620,7 @@
 
         var ri = rowList.length;
         rowList.push({si:si, pi:pi});
-        rowMeta[si][pi] = {pid:pid, tot:tot};
+        rowMeta[si][pi] = {pid:pid, tot:tot, res:res};
         cellIndex[si].push([]);
         meta.forEach(function(x){
           var td = document.createElement("td");
@@ -594,6 +669,11 @@
         Object.keys(a).forEach(function(d){ b[d] = 1; });
         delete state.leave[p.id];
       }
+      ["accrual","done","balance"].forEach(function(bag){
+        if (!state[bag] || state[bag][p.id] === undefined) return;
+        if (state[bag][t.id] === undefined) state[bag][t.id] = state[bag][p.id];
+        delete state[bag][p.id];
+      });
       state.people = state.people.filter(function(q){ return q.id !== p.id; });
     }
     commit(true);
@@ -610,6 +690,11 @@
       Object.keys(a).forEach(function(d){ copy[d] = 1; });
       state.leave[np.id] = copy;
     }
+    ["accrual","done","balance"].forEach(function(bag){
+      if (!state[bag] || state[bag][p.id] === undefined) return;
+      var v = state[bag][p.id];
+      state[bag][np.id] = (v && typeof v === "object") ? JSON.parse(JSON.stringify(v)) : v;
+    });
     commit(true);
   }
 
@@ -696,6 +781,17 @@
         }
         rm.tot.textContent = tot ? tot : "";
         rm.tot.title = tot ? tot + " giorni di ferie in " + MESI[m] : "";
+        if (rm.res){
+          var lb = lastBalance(rm.pid);
+          if (lb){
+            rm.res.textContent = fmtNum(lb.val) + "\u00b7" + MESIB[lb.m];
+            rm.res.title = "Ferie residue a fine " + MESI[lb.m] + " " + lb.y +
+                           " (dal prospetto annuale, in fondo alla pagina)";
+            rm.res.hidden = false;
+          } else {
+            rm.res.textContent = ""; rm.res.title = ""; rm.res.hidden = true;
+          }
+        }
       });
       for (var d2=1; d2<=n; d2++){
         var c = a.counts[si][d2], td2 = cntIndex[si][d2];
@@ -754,7 +850,7 @@
       ul.appendChild(li2);
     }
   }
-  function render(){ buildGrid(); }
+  function render(){ buildGrid(); buildYear(); }
 
   /* ---------- clic e trascinamento ---------- */
   var paint = null;
@@ -957,7 +1053,30 @@
       Object.keys(lv).forEach(function(pid){ if (!live[pid]) delete lv[pid]; });
     }
 
-    return {v:DATA_V, ts:(parseInt(o.ts,10) || 0), people:people, services:services, leave:lv};
+    var live = {};
+    services.forEach(function(sv){ sv.members.forEach(function(id){ live[id] = 1; }); });
+    function keepNums(src, nested){
+      var out = {};
+      Object.keys(src || {}).forEach(function(pid){
+        if (!live[pid]) return;
+        if (!nested){
+          var n = parseFloat(src[pid]);
+          if (isFinite(n)) out[pid] = n;
+          return;
+        }
+        var m = src[pid]; if (!m || typeof m !== "object") return;
+        var keep = {};
+        Object.keys(m).forEach(function(k){
+          if (!/^\d{4}-\d{2}$/.test(k)) return;
+          var n2 = parseFloat(m[k]);
+          if (isFinite(n2)) keep[k] = n2;
+        });
+        if (Object.keys(keep).length) out[pid] = keep;
+      });
+      return out;
+    }
+    return {v:DATA_V, ts:(parseInt(o.ts,10) || 0), people:people, services:services, leave:lv,
+            accrual:keepNums(o.accrual, false), done:keepNums(o.done, true), balance:keepNums(o.balance, true)};
   }
 
   function note(t){ document.getElementById("savenote").textContent = t; }
@@ -970,6 +1089,7 @@
   }
   function refreshUI(){
     var eb = document.getElementById("editbtn");
+    document.getElementById("robar").hidden = canEdit;
     document.getElementById("addsvc").hidden = !canEdit;
     document.getElementById("clearmonth").hidden = !canEdit;
     document.getElementById("dataload").hidden = !canEdit;
@@ -1169,6 +1289,13 @@
         : "Non riesco a contattare GitHub.";
     });
   }
+  document.getElementById("roact").addEventListener("click", function(){
+    var box = document.getElementById("ghbox");
+    box.hidden = false;
+    document.getElementById("ghforget").hidden = !token;
+    try{ if (box.scrollIntoView) box.scrollIntoView({block:"center"}); }catch(e){}
+    document.getElementById("ghtoken").focus();
+  });
   document.getElementById("editbtn").addEventListener("click", function(){
     var box = document.getElementById("ghbox");
     box.hidden = !box.hidden;
@@ -1203,6 +1330,235 @@
     if (document.visibilityState === "visible" && !canEdit && !statusMsg) loadRemote(true);
   });
 
+
+  /* ---------- prospetto annuale ----------
+     Niente calcoli: i numeri li inserisce chi gestisce, quando arrivano le buste.
+     Una riga per persona, anche se lavora su più servizi; per ogni mese due
+     colonnine, le ferie fatte e le residue a quella data. */
+  var MESIB = ["gen","feb","mar","apr","mag","giu","lug","ago","set","ott","nov","dic"];
+
+  function roster(){
+    var out = [], seen = {};
+    state.services.forEach(function(svc){
+      svc.members.forEach(function(pid){
+        if (seen[pid]) return;
+        var p = person(pid);
+        if (!p) return;
+        seen[pid] = 1;
+        out.push(p);
+      });
+    });
+    return out;
+  }
+  function ymKey(y, m){ return y + "-" + String(m+1).padStart(2,"0"); }
+  function parseNum(v){
+    var t = String(v == null ? "" : v).trim().replace(",", ".");
+    if (!t) return null;
+    var n = parseFloat(t);
+    return isFinite(n) ? Math.round(n * 100) / 100 : null;
+  }
+  function fmtNum(n){
+    if (n === null || n === undefined || n === "") return "";
+    return String(n).replace(".", ",");
+  }
+  function getCell(bag, pid, key){
+    var m = state[bag] && state[bag][pid];
+    var v = m ? m[key] : null;
+    return (v === null || v === undefined) ? null : v;
+  }
+  function setCell(bag, pid, key, val){
+    if (!state[bag]) state[bag] = {};
+    var m = state[bag][pid];
+    if (val === null){
+      if (m){ delete m[key]; if (!Object.keys(m).length) delete state[bag][pid]; }
+    } else {
+      if (!m) m = state[bag][pid] = {};
+      m[key] = val;
+    }
+  }
+
+  /* ultima "residue" compilata nel prospetto, col mese a cui si riferisce:
+     si cerca a ritroso nell'anno mostrato, poi nell'anno prima */
+  function lastBalance(pid){
+    var bag = state.balance && state.balance[pid];
+    if (!bag) return null;
+    for (var dy=0; dy<=1; dy++){
+      var y = view.y - dy;
+      for (var m=11; m>=0; m--){
+        var v = bag[ymKey(y, m)];
+        if (v !== null && v !== undefined) return {val:v, m:m, y:y};
+      }
+    }
+    return null;
+  }
+
+  function buildYear(){
+    var y = view.y;
+    var now = new Date();
+    var curM = (now.getFullYear() === y) ? now.getMonth() : -1;
+    document.getElementById("ytitle").textContent = "Prospetto annuale " + y;
+    document.getElementById("yhint").textContent =
+      "Una riga per persona. Per ogni mese: M = maturate, F = fatte, R = residue a quella data. "
+      + "M riprende il promemoria accanto al nome; F e R le scrivi tu (si accettano i mezzi giorni, es. 2,5).";
+
+    var t = document.getElementById("ytable");
+    t.textContent = "";
+    var people = roster();
+
+    var thead = document.createElement("thead");
+    var r1 = document.createElement("tr"); r1.className = "ym";
+    var r2 = document.createElement("tr"); r2.className = "ys";
+    var h1 = document.createElement("th"); h1.className = "yname"; h1.rowSpan = 2;
+    h1.textContent = "Dipendente"; r1.appendChild(h1);
+    var h2 = document.createElement("th"); h2.className = "ymat"; h2.rowSpan = 2;
+    h2.textContent = "matura/mese";
+    h2.title = "Promemoria: quanti giorni di ferie matura al mese questa persona";
+    r1.appendChild(h2);
+    for (var m=0; m<12; m++){
+      var mh = document.createElement("th");
+      mh.colSpan = 3; mh.textContent = MESIB[m];
+      if (m === curM) mh.className = "mnow";
+      r1.appendChild(mh);
+      var z = document.createElement("th"); z.className = "mcol"; z.textContent = "M";
+      z.title = "Ferie maturate in " + MESI[m] + " (ripresa dal promemoria accanto al nome)";
+      r2.appendChild(z);
+      var a = document.createElement("th"); a.textContent = "F";
+      a.title = "Ferie fatte in " + MESI[m]; r2.appendChild(a);
+      var b = document.createElement("th"); b.textContent = "R";
+      b.title = "Ferie residue alla fine di " + MESI[m]; r2.appendChild(b);
+    }
+    thead.appendChild(r1); thead.appendChild(r2); t.appendChild(thead);
+
+    var tb = document.createElement("tbody");
+    if (!people.length){
+      var tr0 = document.createElement("tr");
+      var td0 = document.createElement("td");
+      td0.colSpan = 38; td0.style.padding = "14px";
+      td0.style.textAlign = "left"; td0.style.color = "var(--ink-2)";
+      td0.textContent = "Nessun dipendente: aggiungili nel tabellone qui sopra.";
+      tr0.appendChild(td0); tb.appendChild(tr0);
+    }
+    people.forEach(function(p){
+      var tr = document.createElement("tr");
+      var th = document.createElement("th"); th.className = "yname";
+      th.textContent = p.name || "\u2014";
+      var where = servicesOf(p.id).map(function(s){ return s.name || "senza nome"; }).join(", ");
+      if (where) th.title = where;
+      tr.appendChild(th);
+
+      var tdm = document.createElement("td"); tdm.className = "ymat";
+      var mi = document.createElement("input");
+      mi.className = "ymatin"; mi.type = "text"; mi.inputMode = "decimal";
+      mi.value = fmtNum(state.accrual && state.accrual[p.id] != null ? state.accrual[p.id] : null);
+      mi.placeholder = "\u2013";
+      mi.title = "Giorni maturati al mese";
+      if (!canEdit) mi.readOnly = true;
+      mi.addEventListener("change", function(){
+        if (!canEdit){ mi.value = fmtNum(state.accrual && state.accrual[p.id]); return; }
+        var n = parseNum(mi.value);
+        if (!state.accrual) state.accrual = {};
+        if (n === null) delete state.accrual[p.id]; else state.accrual[p.id] = n;
+        mi.value = fmtNum(n);
+        commit(false);
+        buildYear();
+      });
+      tdm.appendChild(mi); tr.appendChild(tdm);
+
+      for (var mm=0; mm<12; mm++){
+        /* colonna M: non si scrive, riprende il promemoria accanto al nome */
+        var tdM = document.createElement("td"); tdM.className = "mcol";
+        if (mm === curM) tdM.classList.add("now");
+        tdM.textContent = fmtNum(state.accrual && state.accrual[p.id] != null ? state.accrual[p.id] : null);
+        tdM.title = "Maturate in " + MESI[mm] + ": ripresa dal promemoria accanto al nome";
+        tr.appendChild(tdM);
+        [["done",""],["balance",""]].forEach(function(pair){
+          var bag = pair[0];
+          var td = document.createElement("td");
+          if (pair[1]) td.className = pair[1];
+          if (mm === curM) td.classList.add("now");
+          var key = ymKey(y, mm);
+          var inp = document.createElement("input");
+          inp.className = "ycell"; inp.type = "text"; inp.inputMode = "decimal";
+          var v = getCell(bag, p.id, key);
+          inp.value = fmtNum(v);
+          if (v !== null) inp.classList.add("set");
+          inp.title = (bag === "done" ? "Ferie fatte in " : "Ferie residue a fine ") + MESI[mm] + " \u2014 " + (p.name || "senza nome");
+          if (!canEdit) inp.readOnly = true;
+          inp.addEventListener("change", function(){
+            if (!canEdit){ inp.value = fmtNum(getCell(bag, p.id, key)); return; }
+            var n = parseNum(inp.value);
+            setCell(bag, p.id, key, n);
+            inp.value = fmtNum(n);
+            inp.classList.toggle("set", n !== null);
+            commit(false);
+          });
+          td.appendChild(inp); tr.appendChild(td);
+        });
+      }
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+  }
+
+  /* stampa del solo prospetto */
+  function printYear(){
+    var y = view.y, people = roster();
+    var area = document.getElementById("printarea");
+    area.textContent = "";
+    var page = document.createElement("div"); page.className = "pt";
+    var h = document.createElement("h3");
+    h.textContent = "Prospetto ferie " + y;
+    page.appendChild(h);
+    var leg = document.createElement("p"); leg.className = "leg";
+    leg.textContent = "Per ogni mese: M = ferie maturate, F = ferie fatte, R = ferie residue a quella data.";
+    page.appendChild(leg);
+
+    var t = document.createElement("table"); t.className = "pr py";
+    var cols = document.createElement("colgroup");
+    var c1 = document.createElement("col"); c1.style.width = "40mm"; cols.appendChild(c1);
+    for (var i=0;i<36;i++) cols.appendChild(document.createElement("col"));
+    t.appendChild(cols);
+
+    var thead = document.createElement("thead");
+    var r1 = document.createElement("tr"), r2 = document.createElement("tr"); r2.className = "wdr";
+    var a1 = document.createElement("th"); a1.className = "who"; a1.rowSpan = 2; a1.textContent = "Dipendente";
+    r1.appendChild(a1);
+    for (var m=0; m<12; m++){
+      var mh = document.createElement("th"); mh.colSpan = 3; mh.textContent = MESIB[m];
+      r1.appendChild(mh);
+      var mt = document.createElement("th"); mt.className = "mcol"; mt.textContent = "M"; r2.appendChild(mt);
+      var f = document.createElement("th"); f.textContent = "F"; r2.appendChild(f);
+      var rr = document.createElement("th"); rr.textContent = "R"; r2.appendChild(rr);
+    }
+    thead.appendChild(r1); thead.appendChild(r2); t.appendChild(thead);
+
+    var tb = document.createElement("tbody");
+    people.forEach(function(p){
+      var tr = document.createElement("tr");
+      var th = document.createElement("th"); th.className = "who";
+      th.textContent = p.name || "\u2014"; tr.appendChild(th);
+      var acc = fmtNum(state.accrual && state.accrual[p.id] != null ? state.accrual[p.id] : null);
+      for (var mm=0; mm<12; mm++){
+        var key = ymKey(y, mm);
+        var dm = document.createElement("td");
+        dm.className = "mcol"; dm.textContent = acc;
+        tr.appendChild(dm);
+        var d1 = document.createElement("td");
+        d1.textContent = fmtNum(getCell("done", p.id, key));
+        tr.appendChild(d1);
+        var d2 = document.createElement("td");
+        d2.textContent = fmtNum(getCell("balance", p.id, key));
+        tr.appendChild(d2);
+      }
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb);
+    page.appendChild(t);
+    area.appendChild(page);
+    window.print();
+  }
+  document.getElementById("yprint").addEventListener("click", printYear);
+
   /* ---------- stampa ----------
      Una vista a parte: tabella fissa che sta in una pagina A4 orizzontale,
      una pagina per mese, con i soli servizi scelti. */
@@ -1230,7 +1586,7 @@
 
     var t = document.createElement("table"); t.className = "pr";
     var cols = document.createElement("colgroup");
-    var cw = document.createElement("col"); cw.style.width = "36mm"; cols.appendChild(cw);
+    var cw = document.createElement("col"); cw.style.width = "40mm"; cols.appendChild(cw);
     for (var i=0;i<n;i++) cols.appendChild(document.createElement("col"));
     t.appendChild(cols);
 
