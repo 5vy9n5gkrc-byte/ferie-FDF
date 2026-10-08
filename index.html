@@ -199,6 +199,8 @@
   .ycell:focus{outline:2px solid var(--leave); outline-offset:-2px; background:var(--paper)}
   .ycell:read-only{cursor:default}
   .ycell.set{font-weight:600}
+  .ycell.calc{color:var(--ink-2); font-style:italic}
+  .res.calc{font-style:italic; font-weight:500}
   .ymatin{width:58px; height:26px; border:1px solid transparent; background:transparent; color:inherit; font:inherit;
     font-size:12.5px; text-align:center; border-radius:3px}
   .ymatin:hover{border-color:var(--rule)}
@@ -259,6 +261,7 @@
     table.pr.py th, table.pr.py td{height:4.4mm}
     table.pr.py th.who{width:40mm; font-size:6.5pt}
     table.pr.py td.mcol, table.pr.py th.mcol{background:#ececec; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+    table.pr.py td.calc{font-style:italic; color:#555}
   }
   @media (prefers-reduced-motion:no-preference){
     .status{transition:background-color .18s ease, border-color .18s ease}
@@ -786,7 +789,9 @@
           if (lb){
             rm.res.textContent = fmtNum(lb.val) + "\u00b7" + MESIB[lb.m];
             rm.res.title = "Ferie residue a fine " + MESI[lb.m] + " " + lb.y +
-                           " (dal prospetto annuale, in fondo alla pagina)";
+                           (lb.proposed ? " (proposta calcolata)" : " (valore inserito)") +
+                           " \u2014 dal prospetto annuale, in fondo alla pagina";
+            rm.res.classList.toggle("calc", !!lb.proposed);
             rm.res.hidden = false;
           } else {
             rm.res.textContent = ""; rm.res.title = ""; rm.res.hidden = true;
@@ -1377,16 +1382,41 @@
     }
   }
 
+  /* Residua effettiva di un mese: se è scritta a mano vince quella, altrimenti
+     la si propone come R del mese precedente + maturate - fatte. La catena si
+     appoggia al primo valore scritto a mano che trova indietro nel tempo; senza
+     quello non c'è proposta, perché manca il punto di partenza. */
+  function matOf(pid){
+    var v = state.accrual && state.accrual[pid];
+    return (v === null || v === undefined) ? 0 : v;
+  }
+  function effBalance(pid, y, m, depth){
+    var stored = getCell("balance", pid, ymKey(y, m));
+    if (stored !== null) return stored;
+    if ((depth || 0) > 24) return null;
+    var py = (m === 0) ? y - 1 : y, pm = (m === 0) ? 11 : m - 1;
+    var prev = effBalance(pid, py, pm, (depth || 0) + 1);
+    if (prev === null) return null;
+    var f = getCell("done", pid, ymKey(y, m));
+    return Math.round((prev + matOf(pid) - (f === null ? 0 : f)) * 100) / 100;
+  }
+  function isProposed(pid, y, m){
+    return getCell("balance", pid, ymKey(y, m)) === null && effBalance(pid, y, m) !== null;
+  }
+
   /* ultima "residue" compilata nel prospetto, col mese a cui si riferisce:
      si cerca a ritroso nell'anno mostrato, poi nell'anno prima */
   function lastBalance(pid){
-    var bag = state.balance && state.balance[pid];
-    if (!bag) return null;
+    var now = new Date();
     for (var dy=0; dy<=1; dy++){
       var y = view.y - dy;
-      for (var m=11; m>=0; m--){
-        var v = bag[ymKey(y, m)];
-        if (v !== null && v !== undefined) return {val:v, m:m, y:y};
+      /* nell'anno in corso si guarda fino al mese corrente: le proposte dei mesi
+         successivi sono previsioni, non ferie residue "a oggi" */
+      var cap = (y === now.getFullYear()) ? now.getMonth() : 11;
+      if (y > now.getFullYear()) cap = 11;
+      for (var m=cap; m>=0; m--){
+        var v = effBalance(pid, y, m);
+        if (v !== null) return {val:v, m:m, y:y, proposed:isProposed(pid, y, m)};
       }
     }
     return null;
@@ -1399,7 +1429,10 @@
     document.getElementById("ytitle").textContent = "Prospetto annuale " + y;
     document.getElementById("yhint").textContent =
       "Una riga per persona. Per ogni mese: M = maturate, F = fatte, R = residue a quella data. "
-      + "M riprende il promemoria accanto al nome; F e R le scrivi tu (si accettano i mezzi giorni, es. 2,5).";
+      + "M riprende il promemoria accanto al nome. F la scrivi tu. R viene proposta come "
+      + "R del mese precedente + M \u2212 F: in corsivo se \u00e8 una proposta, in grassetto se l'hai scritta tu. "
+      + "Per fissarla scrivi il numero, per tornare alla proposta svuota la casella. "
+      + "Il primo mese va inserito a mano, perch\u00e9 d\u00e0 il punto di partenza. Si accettano i mezzi giorni (2,5).";
 
     var t = document.getElementById("ytable");
     t.textContent = "";
@@ -1471,26 +1504,37 @@
         tdM.textContent = fmtNum(state.accrual && state.accrual[p.id] != null ? state.accrual[p.id] : null);
         tdM.title = "Maturate in " + MESI[mm] + ": ripresa dal promemoria accanto al nome";
         tr.appendChild(tdM);
-        [["done",""],["balance",""]].forEach(function(pair){
-          var bag = pair[0];
+        ["done","balance"].forEach(function(bag){
           var td = document.createElement("td");
-          if (pair[1]) td.className = pair[1];
           if (mm === curM) td.classList.add("now");
-          var key = ymKey(y, mm);
+          var key = ymKey(y, mm), mon = mm;
           var inp = document.createElement("input");
           inp.className = "ycell"; inp.type = "text"; inp.inputMode = "decimal";
-          var v = getCell(bag, p.id, key);
-          inp.value = fmtNum(v);
-          if (v !== null) inp.classList.add("set");
-          inp.title = (bag === "done" ? "Ferie fatte in " : "Ferie residue a fine ") + MESI[mm] + " \u2014 " + (p.name || "senza nome");
+          var stored = getCell(bag, p.id, key);
+          if (bag === "done"){
+            inp.value = fmtNum(stored);
+            if (stored !== null) inp.classList.add("set");
+            inp.title = "Ferie fatte in " + MESI[mon] + " \u2014 " + (p.name || "senza nome");
+          } else {
+            var eff = effBalance(p.id, y, mon);
+            inp.value = fmtNum(stored !== null ? stored : eff);
+            if (stored !== null){
+              inp.classList.add("set");
+              inp.title = "Ferie residue a fine " + MESI[mon] + ": valore inserito da te \u2014 " + (p.name || "senza nome");
+            } else if (eff !== null){
+              inp.classList.add("calc");
+              inp.title = "Proposta: residue di " + MESI[(mon+11)%12] + " + maturate \u2212 fatte. "
+                        + "Scrivi un numero per fissarlo, svuota la casella per tornare alla proposta.";
+            } else {
+              inp.title = "Ferie residue a fine " + MESI[mon] + ". Senza un valore di partenza non c'\u00e8 proposta: scrivilo a mano una volta.";
+            }
+          }
           if (!canEdit) inp.readOnly = true;
           inp.addEventListener("change", function(){
-            if (!canEdit){ inp.value = fmtNum(getCell(bag, p.id, key)); return; }
-            var n = parseNum(inp.value);
-            setCell(bag, p.id, key, n);
-            inp.value = fmtNum(n);
-            inp.classList.toggle("set", n !== null);
+            if (!canEdit){ buildYear(); return; }
+            setCell(bag, p.id, key, parseNum(inp.value));
             commit(false);
+            buildYear();
           });
           td.appendChild(inp); tr.appendChild(td);
         });
@@ -1510,7 +1554,8 @@
     h.textContent = "Prospetto ferie " + y;
     page.appendChild(h);
     var leg = document.createElement("p"); leg.className = "leg";
-    leg.textContent = "Per ogni mese: M = ferie maturate, F = ferie fatte, R = ferie residue a quella data.";
+    leg.textContent = "Per ogni mese: M = ferie maturate, F = ferie fatte, R = ferie residue a quella data. "
+      + "In corsivo le residue calcolate (R del mese prima + M \u2212 F), in tondo quelle inserite a mano.";
     page.appendChild(leg);
 
     var t = document.createElement("table"); t.className = "pr py";
@@ -1547,7 +1592,9 @@
         d1.textContent = fmtNum(getCell("done", p.id, key));
         tr.appendChild(d1);
         var d2 = document.createElement("td");
-        d2.textContent = fmtNum(getCell("balance", p.id, key));
+        var effv = effBalance(p.id, y, mm);
+        d2.textContent = fmtNum(effv);
+        if (isProposed(p.id, y, mm)) d2.className = "calc";
         tr.appendChild(d2);
       }
       tb.appendChild(tr);
